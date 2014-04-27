@@ -79,7 +79,7 @@ try {
             $.each(rulesEngine.forbiddenSequences, function (idx, seq) {
                 var sequences = [seq, seq.split('').reverse().join('')];
                 $.each(sequences, function (idx, sequence) {
-                    for (j = 0; j < (word.length - 3); j += 1) { //iterate the word trough a sliding window of size 3:
+                    for (j = 0; j < (word.length - 2); j += 1) { // iterate the word trough a sliding window of size 3:
                         if (sequence.indexOf(word.toLowerCase().substring(j, j + 3)) > -1) {
                             found = true;
                         }

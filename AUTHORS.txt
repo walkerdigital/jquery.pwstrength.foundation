@@ -11,3 +11,4 @@ Maximilian Meister <mmeister@suse.de>
 André Durão <andreluisdurao@gmail.com>
 Peter Goes <https://github.com/petergoes>
 Brent <https://github.com/bergerbs>
+mikemey <https://github.com/mikemey>

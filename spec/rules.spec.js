@@ -1,5 +1,5 @@
-/*jslint node: true, nomen: true */
-/*global describe, it, expect */
+/*jslint node: true, nomen: true, unparam: true */
+/*global describe, it, expect, beforeEach */
 
 "use strict";
 
@@ -49,7 +49,7 @@ var jsdom = require('jsdom').jsdom,
             raisePower: 1.4
         },
         ui: {
-            spanError: function () { return ""; }
+            spanError: function (options, error) { return error; }
         },
         instances: {
             errors: []
@@ -163,5 +163,25 @@ describe('Applying relaxed rules', function () {
         var password = 'short';
         expect(rulesEngine.executeRules(relaxedOptions, password))
             .toEqual(1);
+    });
+});
+
+describe('Looking for sequences', function () {
+    beforeEach(function () {
+        options.instances.errors = [];
+    });
+
+    it('at the beginning of the password', function () {
+        var password = 'abcx';
+        expect(rulesEngine.validation.wordSequences(options, password, 123))
+            .toEqual(123);
+        expect(options.instances.errors).toEqual(["sequence_found"]);
+    });
+
+    it('at the end of the password', function () {
+        var password = 'xabc';
+        expect(rulesEngine.validation.wordSequences(options, password, 123))
+            .toEqual(123);
+        expect(options.instances.errors).toEqual(["sequence_found"]);
     });
 });
