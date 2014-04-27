@@ -14,10 +14,9 @@ module.exports = function (grunt) {
         '*/\n\n' +
         '(function (jQuery) {\n';
 
-    // Project configuration
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
-        jslint: { // configure the task
+        jslint: {
             client: {
                 src: [
                     'src/*js', 'spec/*js', 'Gruntfile.js'
@@ -29,6 +28,15 @@ module.exports = function (grunt) {
                     ]
                 }
             }
+        },
+        jasmine_node: {
+            options: {
+                forceExit: true,
+                jUnit: {
+                    report: false
+                }
+            },
+            all: ['spec/']
         },
         concat: {
             options: {
