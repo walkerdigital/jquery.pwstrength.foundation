@@ -1,8 +1,10 @@
 # CHANGELOG
 
-## 1.1.2dev
+## 1.1.2
 
-- Upgrade dev dependencies: grunt-contrib-uglify and jquery
+- Upgrade dev dependencies: grunt plugins and jquery
+- Bugfix in sequences lookup
+- New tests for sequences lookup
 
 ## 1.1.1
 
