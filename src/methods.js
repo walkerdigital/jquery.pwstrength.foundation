@@ -20,6 +20,7 @@ var methods = {};
             options = $el.data("pwstrength-bootstrap"),
             word = $el.val(),
             username,
+            verdictText,
             score;
 
         options.instances.errors = [];
@@ -34,11 +35,12 @@ var methods = {};
             score = rulesEngine.executeRules(options, word);
         }
         ui.updateUI(options, $el, score);
+        verdictText = ui.getVerdictAndCssClass(options, score)[0];
 
-        if (options.common.debug) { console.log(score); }
+        if (options.common.debug) { console.log(score + ' - ' + verdictText); }
 
         if ($.isFunction(options.common.onKeyUp)) {
-            options.common.onKeyUp(event);
+            options.common.onKeyUp(event, score, verdictText);
         }
     };
 

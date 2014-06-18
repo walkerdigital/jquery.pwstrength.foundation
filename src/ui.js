@@ -212,8 +212,8 @@ var ui = {};
         return result;
     };
 
-    ui.updateUI = function (options, $el, score) {
-        var cssClass, barPercentage, verdictText;
+    ui.getVerdictAndCssClass = function (options, score) {
+        var cssClass, verdictText;
 
         if (score <= 0) {
             cssClass = 0;
@@ -234,6 +234,16 @@ var ui = {};
             cssClass = 2;
             verdictText = options.ui.verdicts[4];
         }
+
+        return [verdictText, cssClass];
+    };
+
+    ui.updateUI = function (options, $el, score) {
+        var cssClass, barPercentage, verdictText;
+
+        cssClass = ui.getVerdictAndCssClass(options, score);
+        verdictText = cssClass[0];
+        cssClass = cssClass[1];
 
         if (options.ui.showProgressBar) {
             barPercentage = ui.percentage(score, options.ui.scores[3]);

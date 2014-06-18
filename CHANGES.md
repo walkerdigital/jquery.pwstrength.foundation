@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 1.1.3
+
+- Pass the score and the verdict to the "on key up" event handler.
+
 ## 1.1.2
 
 - Upgrade dev dependencies: grunt plugins and jquery
