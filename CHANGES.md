@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 1.1.4
+
+- Bower support.
+
 ## 1.1.3
 
 - Pass the score and the verdict to the "on key up" event handler.
