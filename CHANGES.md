@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 1.1.5
+
+- Better Bower configuration.
+- Pass also the verdict level to the "on key up" event handler.
+- Add a basic usage section to the readme.
+
 ## 1.1.4
 
 - Bower support.

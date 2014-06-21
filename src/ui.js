@@ -213,29 +213,35 @@ var ui = {};
     };
 
     ui.getVerdictAndCssClass = function (options, score) {
-        var cssClass, verdictText;
+        var cssClass, verdictText, level;
 
         if (score <= 0) {
             cssClass = 0;
+            level = -1;
             verdictText = "";
         } else if (score < options.ui.scores[0]) {
             cssClass = 0;
+            level = 0;
             verdictText = options.ui.verdicts[0];
         } else if (score < options.ui.scores[1]) {
             cssClass = 0;
+            level = 1;
             verdictText = options.ui.verdicts[1];
         } else if (score < options.ui.scores[2]) {
             cssClass = 1;
+            level = 2;
             verdictText = options.ui.verdicts[2];
         } else if (score < options.ui.scores[3]) {
             cssClass = 1;
+            level = 3;
             verdictText = options.ui.verdicts[3];
         } else {
             cssClass = 2;
+            level = 4;
             verdictText = options.ui.verdicts[4];
         }
 
-        return [verdictText, cssClass];
+        return [verdictText, cssClass, level];
     };
 
     ui.updateUI = function (options, $el, score) {

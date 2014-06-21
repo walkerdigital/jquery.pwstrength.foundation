@@ -21,6 +21,7 @@ var methods = {};
             word = $el.val(),
             username,
             verdictText,
+            verdictLevel,
             score;
 
         options.instances.errors = [];
@@ -35,12 +36,18 @@ var methods = {};
             score = rulesEngine.executeRules(options, word);
         }
         ui.updateUI(options, $el, score);
-        verdictText = ui.getVerdictAndCssClass(options, score)[0];
+        verdictText = ui.getVerdictAndCssClass(options, score);
+        verdictLevel = verdictText[2];
+        verdictText = verdictText[0];
 
         if (options.common.debug) { console.log(score + ' - ' + verdictText); }
 
         if ($.isFunction(options.common.onKeyUp)) {
-            options.common.onKeyUp(event, score, verdictText);
+            options.common.onKeyUp(event, {
+                score: score,
+                verdictText: verdictText,
+                verdictLevel: verdictLevel
+            });
         }
     };
 

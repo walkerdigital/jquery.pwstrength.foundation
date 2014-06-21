@@ -80,8 +80,8 @@ Let's see the options of each section.
   Default: `undefined` (Function)
 
   A callback function, fired on key up when the user is typing. The `keyup`
-  event will be passed as first argument, the score as second, and the verdict
-  as third.
+  event will be passed as first argument, and an object as second with the
+  score and the verdict text and level.
 
 * __zxcvbn__:
 
