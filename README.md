@@ -19,6 +19,25 @@ Dual licensed under the MIT and GPL licenses.
 * Bootstrap 2 or 3
 
 
+## How to use it
+
+Just invoke the plugin on the password fields you want to attach a strength
+meter to. For example, to use it on all the password fields with the default
+examples:
+
+```javascript
+    $(':password').pwstrength();
+```
+
+To apply it only to one input and change the options:
+
+```javascript
+    $('#passwd1').pwstrength({
+        ui: { showVerdictsInsideProgressBar: true }
+    });
+```
+
+
 ## Options
 
 The plugin expect the options to follow this structure:
