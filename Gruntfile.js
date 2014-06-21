@@ -75,9 +75,6 @@ module.exports = function (grunt) {
             copyFile: {
                 command: 'cp <%= concat.dist.dest %> examples/pwstrength.js'
             },
-            copyLatest: {
-                command: 'cp <%= concat.dist.dest %> dist/pwstrength-bootstrap-latest.min.js'
-            },
             makeDir: {
                 command: 'mkdir -p dist'
             },
