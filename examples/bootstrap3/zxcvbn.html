@@ -11,8 +11,16 @@
             <div class="row" id="pwd-container">
                 <div class="col-sm-4">
                     <div class="form-group">
-                        <label for="username">Password</label>
-                        <input type="text" class="form-control" id="username" placeholder="Username" value="tester">
+                        <label for="username">Username</label>
+                        <input type="text" class="form-control" id="username" placeholder="Username" value="ieyasu">
+                    </div>
+                    <div class="form-group">
+                        <label for="year">Year of birth</label>
+                        <input type="text" class="form-control" id="year" placeholder="1970" value="1543">
+                    </div>
+                    <div class="form-group">
+                        <label for="familyname">Family Name</label>
+                        <input type="text" class="form-control" id="familyname" placeholder="Name" value="Tokugawa">
                     </div>
                     <div class="form-group">
                         <label for="password">Password</label>
@@ -48,7 +56,8 @@
                 onLoad: function () {
                     $('#messages').text('Start typing password');
                 },
-                zxcvbn: true
+                zxcvbn: true,
+                userInputs: ['#year', '#familyname']
             };
             $(':password').pwstrength(options);
         });

@@ -68,6 +68,16 @@ Let's see the options of each section.
   The username field to match a password to, to ensure the user does not use
   the same value for their password.
 
+* __userInputs__:
+
+  Default: `[]` (Array)
+
+  Array of CSS selectors for input fields with user input. The content of these
+  fields will be retrieved and passed to the zxcvbn library.
+
+  This option only takes effect when the zxcvbn library is being used. Check
+  the `zxcvbn` option.
+
 * __onLoad__:
 
   Default: `undefined` (Function)
@@ -242,7 +252,8 @@ Let's see the options of each section.
 
   Default: `["Weak", "Normal", "Medium", "Strong", "Very Strong"]` (Array)
 
-  The display names for the verdicts related to the progressClass.
+  The display names for the verdicts related to the progressClass. It has to
+  have 5 elements, and they would be the 5 possible strength categories.
 
 * __showVerdicts__:
 
@@ -292,7 +303,9 @@ Let's see the options of each section.
 
   Default: `[17, 26, 40, 50]` (Array)
 
-  The scores used to determine what progressClass and verdicts to display.
+  The scores used to determine what progressClass and verdicts to display. It
+  has to have 4 elements, which creates 5 categories of strength (the 5
+  possible verdicts).
 
 #### Example of an options object
 
