@@ -218,7 +218,7 @@ var ui = {};
         if (score <= 0) {
             cssClass = 0;
             level = -1;
-            verdictText = "";
+            verdictText = options.ui.verdicts[0];
         } else if (score < options.ui.scores[0]) {
             cssClass = 0;
             level = 0;

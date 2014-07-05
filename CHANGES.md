@@ -3,6 +3,7 @@
 ## 1.2.0dev
 
 - Listen also to the `change` and `onpaste` events, not only to the `onkeyup`.
+- Show the lowest verdict when the score is below zero.
 
 ## 1.1.5
 
