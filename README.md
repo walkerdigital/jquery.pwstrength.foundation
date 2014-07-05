@@ -206,8 +206,12 @@ Let's see the options of each section.
 
   Default: `false` (Boolean)
 
-  Displays the error messages in a Bootstrap popover, instead of below the
-  input field. Bootstrap tooltip.js and popover.js must to be included.
+  Displays the error messages and the verdicts in a Bootstrap popover, instead
+  of below the input field. Bootstrap tooltip.js and popover.js must to be
+  included.
+
+  If the `showVerdictsInsideProgressBar` option is active, then the verdicts
+  won't appear on the popover.
 
 * __showStatus__:
 
@@ -259,15 +263,16 @@ Let's see the options of each section.
 
   Default: `true` (Boolean)
 
-  Determines if the verdicts are displayed with the progress bar or not.
+  Determines if the verdicts are displayed or not.
 
 * __showVerdictsInsideProgressBar__:
 
   Default: `false` (Boolean)
 
   Determines if the verdicts are displayed inside the progress bar or not. When
-  this setting is active, the verdict viewport is ignored. This option
-  overrides the value of the _showVerdicts_ one.
+  this setting is active, the verdict viewport is ignored and they won't appear
+  on the popover if it is being showed. Also this option overrides the value of
+  the _showVerdicts_ one.
 
 * __showErrors__:
 

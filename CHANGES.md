@@ -5,6 +5,8 @@
 - Listen also to the `change` and `onpaste` events, not only to the `onkeyup`.
 - Show the lowest verdict when the score is below zero.
 - New option to pass more input fields content to the zxcvbn library.
+- Don't show the verdicts inside the popover if they are being showed inside
+  the progressbar.
 
 ## 1.1.5
 

@@ -71,7 +71,7 @@ defaultOptions.ui.spanError = function (options, key) {
     return '<span style="color: #d52929">' + text + '</span>';
 };
 defaultOptions.ui.errorMessages = {
-    password_too_short: "The Password is too short",
+    password_too_short: "Your password is too short",
     email_as_password: "Do not use your email as your password",
     same_as_username: "Your password cannot contain your username",
     two_character_classes: "Use different character classes",

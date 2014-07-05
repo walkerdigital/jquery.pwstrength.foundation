@@ -161,13 +161,15 @@ var ui = {};
             html = "",
             hide = true;
 
-        if (options.ui.showVerdicts && verdictText.length > 0) {
+        if (options.ui.showVerdicts &&
+                !options.ui.showVerdictsInsideProgressBar &&
+                verdictText.length > 0) {
             html = "<h5><span class='password-verdict'>" + verdictText +
                 "</span></h5>";
             hide = false;
         }
         if (options.ui.showErrors) {
-            html += "<div><ul class='error-list'>";
+            html += "<div>Errors:<ul class='error-list' style='margin-bottom: 0;'>";
             $.each(options.instances.errors, function (idx, err) {
                 html += "<li>" + err + "</li>";
                 hide = false;
