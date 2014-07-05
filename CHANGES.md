@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 1.2.0dev
+
+- Listen also to the `change` and `onpaste` events, not only to the `onkeyup`.
+
 ## 1.1.5
 
 - Better Bower configuration.

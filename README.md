@@ -83,6 +83,9 @@ Let's see the options of each section.
   event will be passed as first argument, and an object as second with the
   score and the verdict text and level.
 
+  This handler will also be called when the `change` or the `onpaste` events
+  happen.
+
 * __zxcvbn__:
 
   Default: `false` (Boolean)
