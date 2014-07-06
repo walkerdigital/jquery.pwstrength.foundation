@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## 1.2.0dev
+## 1.2.0
 
 - Listen also to the `change` and `onpaste` events, not only to the `onkeyup`.
 - Show the lowest verdict when the score is below zero.
