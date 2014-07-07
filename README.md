@@ -331,7 +331,33 @@ options.ui = {
 ```
 
 
-## Adding Custom Rules
+## Methods
+
+Once the plugin has been initialized, it is possible to interact with it
+through the methods.
+
+
+### Force an update
+
+It is possible to force an update on a password strength meter. It will force
+a new score calculation and an update of the UI elements, the `onKeyUp`
+callback will be called.
+
+```javascript
+$("#passwdfield").pwstrength("forceUpdate");
+```
+
+
+### Remove the strength meter
+
+This will remove the data associated to the meter, and the UI elements.
+
+```javascript
+$("#passwdfield").pwstrength("destroy");
+```
+
+
+### Adding Custom Rules
 
 The plugin comes with the functionality to easily define your own custom rules.
 The format is as follows:
@@ -349,6 +375,28 @@ $("#passwdfield").pwstrength("addRule", "testRule", function (options, word, sco
 ```
 
 
+### Change the score associated to a rule
+
+It is possible to change the score given by a rule. It works like this:
+
+```javascript
+$("#passwdfield").pwstrength("changeScore", "wordSequences", -100);
+```
+
+That would penalize even more the presence of sequences in the password.
+
+
+### Activate and deactivate rules
+
+It is also possible to activate or deactivate rules. It as simple as:
+
+```javascript
+$("#passwdfield").pwstrength("ruleActive", "wordSequences", false);
+```
+
+That would avoid looking for sequences in the password being tested.
+
+
 ## Callback Functions
 
 The plugin provides two callback functions, onLoad and onKeyUp.  You can use
@@ -361,8 +409,8 @@ $(document).ready(function () {
         onLoad: function () {
             $('#messages').text('Start typing password');
         },
-        onKeyUp: function (evt) {
-            $("#length-help-text").text("Current length: " + $(evt.target).val().length);
+        onKeyUp: function (evt, data) {
+            $("#length-help-text").text("Current length: " + $(evt.target).val().length + " and score: " + data.score);
         }
     };
     $(':password').pwstrength(options);

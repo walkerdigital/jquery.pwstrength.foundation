@@ -24,6 +24,8 @@ var methods = {};
             verdictLevel,
             score;
 
+        if (options === undefined) { return; }
+
         options.instances.errors = [];
         if (options.common.zxcvbn) {
             userInputs = [];
