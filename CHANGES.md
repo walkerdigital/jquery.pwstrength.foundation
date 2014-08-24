@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 1.2.1
+
+- Improve documentation.
+- Fix typo in alphabetical sequence.
+- Use the not minified version of the library in bower as main file.
+
 ## 1.2.0
 
 - Listen also to the `change` and `onpaste` events, not only to the `onkeyup`.
