@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 1.2.2
+
+- Every rule can have associated error messages.
+
 ## 1.2.1
 
 - Improve documentation.

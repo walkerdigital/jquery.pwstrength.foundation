@@ -240,17 +240,18 @@ Let's see the options of each section.
 
   ```
   {
-    password_too_short: "The Password is too short",
-    email_as_password: "Do not use your email as your password",
-    same_as_username: "Your password cannot contain your username",
-    two_character_classes: "Use different character classes",
-    repeated_character: "Too many repetitions",
-    sequence_found: "Your password contains sequences"
+    wordLength: "Your password is too short",
+    wordNotEmail: "Do not use your email as your password",
+    wordSimilarToUsername: "Your password cannot contain your username",
+    wordTwoCharacterClasses: "Use different character classes",
+    wordRepetitions: "Too many repetitions",
+    wordSequences: "Your password contains sequences"
   }
   ```
 
   An object containing error messages. These can be overwritten for language
-  purposes, and extra messages can also be added for your custom rules.
+  purposes, and extra messages can also be added for other rules, existing or
+  custom. Use the name of the rule as key.
 
 * __verdicts__:
 

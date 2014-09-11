@@ -68,15 +68,16 @@ defaultOptions.ui.showStatus = false;
 defaultOptions.ui.spanError = function (options, key) {
     "use strict";
     var text = options.ui.errorMessages[key];
+    if (!text) { return ''; }
     return '<span style="color: #d52929">' + text + '</span>';
 };
 defaultOptions.ui.errorMessages = {
-    password_too_short: "Your password is too short",
-    email_as_password: "Do not use your email as your password",
-    same_as_username: "Your password cannot contain your username",
-    two_character_classes: "Use different character classes",
-    repeated_character: "Too many repetitions",
-    sequence_found: "Your password contains sequences"
+    wordLength: "Your password is too short",
+    wordNotEmail: "Do not use your email as your password",
+    wordSimilarToUsername: "Your password cannot contain your username",
+    wordTwoCharacterClasses: "Use different character classes",
+    wordRepetitions: "Too many repetitions",
+    wordSequences: "Your password contains sequences"
 };
 defaultOptions.ui.verdicts = ["Weak", "Normal", "Medium", "Strong", "Very Strong"];
 defaultOptions.ui.showVerdicts = true;
