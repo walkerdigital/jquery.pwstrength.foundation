@@ -1,24 +1,24 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Bootstrap 3 Password Strength Meter Example - Status</title>
-    <link rel="stylesheet" media="screen" href="bootstrap3.css" />
+    <title>Foundation 5 Password Strength Meter Example - Status</title>
+    <link rel="stylesheet" media="screen" href="http://cdnjs.cloudflare.com/ajax/libs/foundation/5.4.6/css/foundation.min.css" />
 </head>
 <body>
-    <div class="container">
-        <h1>Bootstrap 3 Password Strength Meter Example - Status</h1>
+    <div class="row">
+        <h1>Foundation 5 Password Strength Meter Example - Status</h1>
         <form role="form" style="margin-bottom: 20px;">
             <div class="row" id="pwd-container">
-                <div class="col-sm-4">
+                <div class="columns medium-4">
                     <div class="form-group">
                         <label for="password">Password</label>
                         <input type="password" class="form-control" id="password" placeholder="Password">
                     </div>
-                    <span class="pwstrength_viewport_verdict"></span>
+                    <span class="label pwstrength_viewport_verdict"></span>
                 </div>
             </div>
         </form>
-        <p><a href="..">Go back</a></p>
+        <p><a href="../index.html">Go back</a></p>
     </div>
 
     <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
@@ -32,7 +32,8 @@
                 showStatus: true,
                 showProgressBar: false,
                 viewports: {
-                    verdict: ".pwstrength_viewport_verdict"
+                    verdict: ".pwstrength_viewport_verdict",
+                    status: ".pwstrength_viewport_verdict"
                 }
             };
             $(':password').pwstrength(options);

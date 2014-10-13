@@ -2,7 +2,7 @@
 /*global jQuery, ui, rulesEngine, defaultOptions, zxcvbn, console */
 
 /*
-* jQuery Password Strength plugin for Twitter Bootstrap
+* jQuery Password Strength plugin for Zurb Foundation
 *
 * Copyright (c) 2008-2013 Tane Piper
 * Copyright (c) 2013 Alejandro Blanco
@@ -17,7 +17,7 @@ var methods = {};
 
     onKeyUp = function (event) {
         var $el = $(event.target),
-            options = $el.data("pwstrength-bootstrap"),
+            options = $el.data("pwstrength-foundation"),
             word = $el.val(),
             userInputs,
             verdictText,
@@ -62,7 +62,7 @@ var methods = {};
                 $el = $(el);
 
             localOptions.instances = {};
-            $el.data("pwstrength-bootstrap", localOptions);
+            $el.data("pwstrength-foundation", localOptions);
             $el.on("keyup", onKeyUp);
             $el.on("change", onKeyUp);
             $el.on("onpaste", onKeyUp);
@@ -83,12 +83,12 @@ var methods = {};
     methods.destroy = function () {
         this.each(function (idx, el) {
             var $el = $(el),
-                options = $el.data("pwstrength-bootstrap"),
+                options = $el.data("pwstrength-foundation"),
                 elements = ui.getUIElements(options, $el);
             elements.$progressbar.remove();
             elements.$verdict.remove();
             elements.$errors.remove();
-            $el.removeData("pwstrength-bootstrap");
+            $el.removeData("pwstrength-foundation");
         });
     };
 
@@ -101,7 +101,7 @@ var methods = {};
 
     methods.addRule = function (name, method, score, active) {
         this.each(function (idx, el) {
-            var options = $(el).data("pwstrength-bootstrap");
+            var options = $(el).data("pwstrength-foundation");
 
             options.rules.activated[name] = active;
             options.rules.scores[name] = score;
@@ -111,7 +111,7 @@ var methods = {};
 
     applyToAll = function (rule, prop, value) {
         this.each(function (idx, el) {
-            $(el).data("pwstrength-bootstrap").rules[prop][rule] = value;
+            $(el).data("pwstrength-foundation").rules[prop][rule] = value;
         });
     };
 
@@ -131,7 +131,7 @@ var methods = {};
         } else if (typeof method === "object" || !method) {
             result = methods.init.apply(this, arguments);
         } else {
-            $.error("Method " +  method + " does not exist on jQuery.pwstrength-bootstrap");
+            $.error("Method " +  method + " does not exist on jQuery.pwstrength-foundation");
         }
 
         return result;

@@ -1,29 +1,34 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Bootstrap 3 Password Strength Meter Example</title>
-    <link rel="stylesheet" media="screen" href="bootstrap3.css" />
+    <title>Foundation 5 Password Strength Meter Example</title>
+    <link rel="stylesheet" media="screen" href="http://cdnjs.cloudflare.com/ajax/libs/foundation/5.4.6/css/foundation.min.css" />
 </head>
 <body>
-    <div class="container">
-        <h1>Bootstrap 3 Password Strength Meter Example</h1>
+    <div class="row">
+        <h1>Foundation 5 Password Strength Meter Example</h1>
         <form role="form" style="margin-bottom: 20px;">
             <div class="row" id="pwd-container">
-                <div class="col-sm-4">
-                    <div class="form-group">
-                        <label for="password">Password</label>
-                        <input type="password" class="form-control" id="password" placeholder="Password">
+                <div class="columns medium-4">
+                    <label for="password">Password</label>
+                    <div class="row collapse">
+                        <div class="small-9 columns">
+                            <input type="password" class="form-control" id="password" placeholder="Password">
+                        </div>
+                        <div class="small-3 columns">
+                            <span class="postfix"></span>
+                        </div>
                     </div>
                 </div>
-                <div class="col-sm-6 col-sm-offset-2" style="padding-top: 30px;">
+                <div class="columns medium-6 medium-offset-2" style="padding-top: 30px;">
                     <div class="pwstrength_viewport_progress"></div>
                 </div>
             </div>
             <div class="row">
-                <div id="messages" class="col-sm-12"></div>
+                <div id="messages" class="columns alert"></div>
             </div>
         </form>
-        <p><a href="..">Go back</a></p>
+        <p><a href="../index.html">Go back</a></p>
     </div>
 
     <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
@@ -34,7 +39,8 @@
             var options = {};
             options.ui = {
                 container: "#pwd-container",
-                showVerdictsInsideProgressBar: true,
+                showVerdictsInsideProgressBar: false,
+                showErrors: true,
                 viewports: {
                     progress: ".pwstrength_viewport_progress"
                 }

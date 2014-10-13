@@ -1,8 +1,9 @@
 /*!
-* jQuery Password Strength plugin for Twitter Bootstrap
+* jQuery Password Strength plugin for Zurb Foundation
 *
 * Copyright (c) 2008-2013 Tane Piper
 * Copyright (c) 2013 Alejandro Blanco
+* Copyright (c) 2014 Ed Townend
 * Dual licensed under the MIT and GPL licenses.
 */
 
@@ -222,7 +223,7 @@ defaultOptions.rules.activated = {
 defaultOptions.rules.raisePower = 1.4;
 
 defaultOptions.ui = {};
-defaultOptions.ui.bootstrap2 = false;
+// defaultOptions.ui.bootstrap2 = false;
 defaultOptions.ui.showProgressBar = true;
 defaultOptions.ui.showPopover = false;
 defaultOptions.ui.showStatus = false;
@@ -230,7 +231,8 @@ defaultOptions.ui.spanError = function (options, key) {
     "use strict";
     var text = options.ui.errorMessages[key];
     if (!text) { return ''; }
-    return '<span style="color: #d52929">' + text + '</span>';
+    // return '<span style="color: #d52929">' + text + '</span>';
+    return text;
 };
 defaultOptions.ui.errorMessages = {
     wordLength: "Your password is too short",
@@ -243,12 +245,13 @@ defaultOptions.ui.errorMessages = {
 defaultOptions.ui.verdicts = ["Weak", "Normal", "Medium", "Strong", "Very Strong"];
 defaultOptions.ui.showVerdicts = true;
 defaultOptions.ui.showVerdictsInsideProgressBar = false;
-defaultOptions.ui.showErrors = false;
+defaultOptions.ui.showErrors = true;
 defaultOptions.ui.container = undefined;
 defaultOptions.ui.viewports = {
     progress: undefined,
-    verdict: undefined,
-    errors: undefined
+    verdict: '.postfix',
+    errors: undefined,
+    status: undefined
 };
 defaultOptions.ui.scores = [14, 26, 38, 50];
 
@@ -262,8 +265,8 @@ var ui = {};
 (function ($, ui) {
     "use strict";
 
-    var barClasses = ["danger", "warning", "success"],
-        statusClasses = ["error", "warning", "success"];
+    var barClasses = ["alert", "success", "success"],
+        statusClasses = ["alert", "warning", "success"];
 
     ui.getContainer = function (options, $el) {
         var $container;
@@ -301,7 +304,7 @@ var ui = {};
             if (!options.ui.showVerdictsInsideProgressBar) {
                 result.$verdict = ui.findElement($container, options.ui.viewports.verdict, "span.password-verdict");
             }
-            result.$errors = ui.findElement($container, options.ui.viewports.errors, "ul.error-list");
+            result.$errors = ui.findElement($container, options.ui.viewports.errors, ".error");
         }
 
         options.instances.viewports = result;
@@ -310,12 +313,7 @@ var ui = {};
 
     ui.initProgressBar = function (options, $el) {
         var $container = ui.getContainer(options, $el),
-            progressbar = "<div class='progress'><div class='";
-
-        if (!options.ui.bootstrap2) {
-            progressbar += "progress-";
-        }
-        progressbar += "bar'>";
+            progressbar = "<div class='progress'><div class='meter' style='width:0%'>";
         if (options.ui.showVerdictsInsideProgressBar) {
             progressbar += "<span class='password-verdict'></span>";
         }
@@ -343,7 +341,7 @@ var ui = {};
     };
 
     ui.initErrorList = function (options, $el) {
-        ui.initHelper(options, $el, "<ul class='error-list'></ul>",
+        ui.initHelper(options, $el, "<small class='error' style='display:none;'></small>",
                         options.ui.viewports.errors);
     };
 
@@ -371,22 +369,16 @@ var ui = {};
         }
     };
 
-    ui.possibleProgressBarClasses = ["danger", "warning", "success"];
+    ui.possibleProgressBarClasses = ["alert", "warning", "success"];
 
     ui.updateProgressBar = function (options, $el, cssClass, percentage) {
         var $progressbar = ui.getUIElements(options, $el).$progressbar,
-            $bar = $progressbar.find(".progress-bar"),
-            cssPrefix = "progress-";
-
-        if (options.ui.bootstrap2) {
-            $bar = $progressbar.find(".bar");
-            cssPrefix = "";
-        }
+            $bar = $progressbar.find(".meter");
 
         $.each(ui.possibleProgressBarClasses, function (idx, value) {
-            $bar.removeClass(cssPrefix + "bar-" + value);
+            $progressbar.removeClass(value);
         });
-        $bar.addClass(cssPrefix + "bar-" + barClasses[cssClass]);
+        $progressbar.addClass(barClasses[cssClass]);
         $bar.css("width", percentage + '%');
     };
 
@@ -396,11 +388,21 @@ var ui = {};
     };
 
     ui.updateErrors = function (options, $el) {
-        var $errors = ui.getUIElements(options, $el).$errors,
+        var $container = ui.getContainer(options, $el),
+            $errors = ui.getUIElements(options, $el).$errors,
             html = "";
         $.each(options.instances.errors, function (idx, err) {
-            html += "<li>" + err + "</li>";
+            html += err + "<br>";
         });
+
+        if (html !== "") {
+            $container.addClass('error');
+            $errors.show();
+        } else {
+            $container.removeClass('error');
+            $errors.hide();
+        }
+
         $errors.html(html);
     };
 
@@ -430,8 +432,6 @@ var ui = {};
             return;
         }
 
-        if (options.ui.bootstrap2) { popover = $el.data("popover"); }
-
         if (popover.$arrow && popover.$arrow.parents("body").length > 0) {
             $el.find("+ .popover .popover-content").html(html);
         } else {
@@ -442,16 +442,14 @@ var ui = {};
     };
 
     ui.updateFieldStatus = function (options, $el, cssClass) {
-        var targetClass = options.ui.bootstrap2 ? ".control-group" : ".form-group",
-            $container = $el.parents(targetClass).first();
+
+        var $container = options.ui.viewports.status ? $(options.ui.viewports.status) : ui.getContainer(options, $el);
 
         $.each(statusClasses, function (idx, css) {
-            if (!options.ui.bootstrap2) { css = "has-" + css; }
             $container.removeClass(css);
         });
 
         cssClass = statusClasses[cssClass];
-        if (!options.ui.bootstrap2) { cssClass = "has-" + cssClass; }
         $container.addClass(cssClass);
     };
 
@@ -539,7 +537,7 @@ var methods = {};
 
     onKeyUp = function (event) {
         var $el = $(event.target),
-            options = $el.data("pwstrength-bootstrap"),
+            options = $el.data("pwstrength-foundation"),
             word = $el.val(),
             userInputs,
             verdictText,
@@ -584,7 +582,7 @@ var methods = {};
                 $el = $(el);
 
             localOptions.instances = {};
-            $el.data("pwstrength-bootstrap", localOptions);
+            $el.data("pwstrength-foundation", localOptions);
             $el.on("keyup", onKeyUp);
             $el.on("change", onKeyUp);
             $el.on("onpaste", onKeyUp);
@@ -605,12 +603,12 @@ var methods = {};
     methods.destroy = function () {
         this.each(function (idx, el) {
             var $el = $(el),
-                options = $el.data("pwstrength-bootstrap"),
+                options = $el.data("pwstrength-foundation"),
                 elements = ui.getUIElements(options, $el);
             elements.$progressbar.remove();
             elements.$verdict.remove();
             elements.$errors.remove();
-            $el.removeData("pwstrength-bootstrap");
+            $el.removeData("pwstrength-foundation");
         });
     };
 
@@ -623,7 +621,7 @@ var methods = {};
 
     methods.addRule = function (name, method, score, active) {
         this.each(function (idx, el) {
-            var options = $(el).data("pwstrength-bootstrap");
+            var options = $(el).data("pwstrength-foundation");
 
             options.rules.activated[name] = active;
             options.rules.scores[name] = score;
@@ -633,7 +631,7 @@ var methods = {};
 
     applyToAll = function (rule, prop, value) {
         this.each(function (idx, el) {
-            $(el).data("pwstrength-bootstrap").rules[prop][rule] = value;
+            $(el).data("pwstrength-foundation").rules[prop][rule] = value;
         });
     };
 
@@ -653,7 +651,7 @@ var methods = {};
         } else if (typeof method === "object" || !method) {
             result = methods.init.apply(this, arguments);
         } else {
-            $.error("Method " +  method + " does not exist on jQuery.pwstrength-bootstrap");
+            $.error("Method " +  method + " does not exist on jQuery.pwstrength-foundation");
         }
 
         return result;

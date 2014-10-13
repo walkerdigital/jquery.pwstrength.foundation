@@ -1,12 +1,12 @@
-# jQuery Password Strength Meter for Twitter Bootstrap
+# jQuery Password Strength Meter for Zurb Foundation 5
 
-[![Build Status](https://travis-ci.org/ablanco/jquery.pwstrength.bootstrap.png?branch=master)](https://travis-ci.org/ablanco/jquery.pwstrength.bootstrap)
-[![Code Climate](https://codeclimate.com/github/ablanco/jquery.pwstrength.bootstrap.png)](https://codeclimate.com/github/ablanco/jquery.pwstrength.bootstrap)
-[![devDependency Status](https://david-dm.org/ablanco/jquery.pwstrength.bootstrap/dev-status.png)](https://david-dm.org/ablanco/jquery.pwstrength.bootstrap#info=devDependencies)
+[![Build Status](https://travis-ci.org/edtownend/jquery.pwstrength.foundation.png?branch=master)](https://travis-ci.org/edtownend/jquery.pwstrength.foundation)
+[![Code Climate](https://codeclimate.com/github/edtownend/jquery.pwstrength.foundation.png)](https://codeclimate.com/github/edtownend/jquery.pwstrength.foundation)
+[![devDependency Status](https://david-dm.org/edtownend/jquery.pwstrength.foundation/dev-status.png)](https://david-dm.org/edtownend/jquery.pwstrength.foundation#info=devDependencies)
 
-The jQuery Password Strength Meter is a plugin for Twitter Bootstrap that
+The jQuery Password Strength Meter is a plugin for Zurb Foundation 5 that
 provides rulesets for visualy displaying the quality of a users typed in
-password.
+password. Forked from ablanco/jquery.pwstrength.bootstrap - all I've done is change the outputted syntax
 
 Dual licensed under the MIT and GPL licenses.
 
@@ -16,7 +16,7 @@ Dual licensed under the MIT and GPL licenses.
 ## Requirements
 
 * jQuery 1.7 or higher
-* Bootstrap 2 or 3
+* Foundation 5
 
 
 ## How to use it
@@ -189,13 +189,6 @@ Let's see the options of each section.
 
 ### User Interface
 
-* __bootstrap2__:
-
-  Default: `false` (Boolean)
-
-  Sets if it supports legacy Bootstrap 2 (true) or the current Bootstrap 3
-  (false), the progress bar html is different.
-
 * __showProgressBar__:
 
   Default: `true` (Boolean)
@@ -217,8 +210,9 @@ Let's see the options of each section.
 
   Default: `false` (Boolean)
 
-  Displays the password strength as a validation status in the password field,
-  for this to work, the Bootstrap form structure must be followed.
+  Add a status class (alert, warning, success...) to the selector specified in
+  ui.viewports.status or the container of the form field. Useful for Foundation
+  labels.
 
 * __spanError__:
 
@@ -264,7 +258,8 @@ Let's see the options of each section.
 
   Default: `true` (Boolean)
 
-  Determines if the verdicts are displayed or not.
+  Determines if the verdicts are displayed or not. By default these are shown in
+  a postfix element, so be sure to layout your markup with a posfix label.
 
 * __showVerdictsInsideProgressBar__:
 
@@ -273,13 +268,15 @@ Let's see the options of each section.
   Determines if the verdicts are displayed inside the progress bar or not. When
   this setting is active, the verdict viewport is ignored and they won't appear
   on the popover if it is being showed. Also this option overrides the value of
-  the _showVerdicts_ one.
+  the _showVerdicts_ one. Until Foundation supports text inside progress bars,
+  you're going to have to set the line height yourself to tidy this up.
 
 * __showErrors__:
 
-  Default: `false` (Boolean)
+  Default: `true` (Boolean)
 
-  Determines if the error list is displayed with the progress bar or not.
+  Determines if the error list is displayed or not. Shown in the format of
+  a Foundation error state.
 
 * __container__:
 
@@ -296,8 +293,9 @@ Let's see the options of each section.
   ```
   {
     progress: undefined,
-    verdict: undefined,
-    errors: undefined
+    verdict: '.postfix',
+    errors: undefined,
+    status: undefined
   }
   ```
 
@@ -497,5 +495,5 @@ It will check all the source files with [JSLint](http://jslint.com) and run the
 tests, which are written with [Jasmine](http://jasmine.github.io/). You'll find
 the tests source code in the `spec` directory.
 
-[Travis](https://travis-ci.org/ablanco/jquery.pwstrength.bootstrap) is being
+[Travis](https://travis-ci.org/edtownend/jquery.pwstrength.foundation) is being
 used for continuos integration. You can check there if the tests are passing.

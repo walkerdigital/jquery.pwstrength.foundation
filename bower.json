@@ -1,22 +1,22 @@
 {
-    "name": "pwstrength-bootstrap",
-    "version": "1.2.2",
-    "homepage": "https://github.com/ablanco/jquery.pwstrength.bootstrap",
+    "name": "pwstrength-foundation",
+    "version": "1.2.3",
+    "homepage": "https://github.com/edtownend/jquery.pwstrength.foundation",
     "authors": [
-        "Alejandro Blanco <alejandro.b.e@gmail.com>"
+        "Ed Townend <eddie@teamtownend.com>"
     ],
-    "description": "jQuery plugin for Twitter Bootstrap that provides rulesets for visualy displaying the quality of a users typed in password.",
-    "main": "dist/pwstrength-bootstrap-1.2.2.js",
+    "description": "jQuery plugin for Zurb Foundation 5 that provides rulesets for visualy displaying the quality of a users typed in password.",
+    "main": "dist/pwstrength-foundation-1.2.2.js",
     "dependencies": {
         "jquery": ">=1.7.0",
-        "bootstrap": ">=2.0.0"
+        "foundation": ">=2.0.0"
     },
     "moduleType": [
         "globals"
     ],
     "keywords": [
         "jquery",
-        "bootstrap",
+        "foundation",
         "password",
         "strength",
         "meter"
@@ -32,6 +32,6 @@
         "CHANGES.md",
         "Gruntfile.js",
         "package.json",
-        "pwstrength-bootstrap.jquery.json"
+        "pwstrength-foundation.jquery.json"
     ]
 }

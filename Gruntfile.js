@@ -6,10 +6,11 @@ module.exports = function (grunt) {
 
     var license =
         '/*!\n' +
-        '* jQuery Password Strength plugin for Twitter Bootstrap\n' +
+        '* jQuery Password Strength plugin for Zurb Foundation\n' +
         '*\n' +
         '* Copyright (c) 2008-2013 Tane Piper\n' +
         '* Copyright (c) 2013 Alejandro Blanco\n' +
+        '* Copyright (c) 2014 Ed Townend\n' +
         '* Dual licensed under the MIT and GPL licenses.\n' +
         '*/\n\n' +
         '(function (jQuery) {\n';

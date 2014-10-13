@@ -2,7 +2,7 @@
 /*global */
 
 /*
-* jQuery Password Strength plugin for Twitter Bootstrap
+* jQuery Password Strength plugin for Zurb Foundation
 *
 * Copyright (c) 2008-2013 Tane Piper
 * Copyright (c) 2013 Alejandro Blanco
@@ -61,7 +61,7 @@ defaultOptions.rules.activated = {
 defaultOptions.rules.raisePower = 1.4;
 
 defaultOptions.ui = {};
-defaultOptions.ui.bootstrap2 = false;
+// defaultOptions.ui.bootstrap2 = false;
 defaultOptions.ui.showProgressBar = true;
 defaultOptions.ui.showPopover = false;
 defaultOptions.ui.showStatus = false;
@@ -69,7 +69,8 @@ defaultOptions.ui.spanError = function (options, key) {
     "use strict";
     var text = options.ui.errorMessages[key];
     if (!text) { return ''; }
-    return '<span style="color: #d52929">' + text + '</span>';
+    // return '<span style="color: #d52929">' + text + '</span>';
+    return text;
 };
 defaultOptions.ui.errorMessages = {
     wordLength: "Your password is too short",
@@ -82,11 +83,12 @@ defaultOptions.ui.errorMessages = {
 defaultOptions.ui.verdicts = ["Weak", "Normal", "Medium", "Strong", "Very Strong"];
 defaultOptions.ui.showVerdicts = true;
 defaultOptions.ui.showVerdictsInsideProgressBar = false;
-defaultOptions.ui.showErrors = false;
+defaultOptions.ui.showErrors = true;
 defaultOptions.ui.container = undefined;
 defaultOptions.ui.viewports = {
     progress: undefined,
-    verdict: undefined,
-    errors: undefined
+    verdict: '.postfix',
+    errors: undefined,
+    status: undefined
 };
 defaultOptions.ui.scores = [14, 26, 38, 50];

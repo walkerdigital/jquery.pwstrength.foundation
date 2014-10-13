@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Bootstrap 3 Password Strength Meter Example - zxcvbn</title>
-    <link rel="stylesheet" media="screen" href="bootstrap3.css" />
+    <title>Foundation 5 Password Strength Meter Example - zxcvbn</title>
+    <link rel="stylesheet" media="screen" href="http://cdnjs.cloudflare.com/ajax/libs/foundation/5.4.6/css/foundation.min.css" />
 </head>
 <body>
-    <div class="container">
-        <h1>Bootstrap 3 Password Strength Meter Example - zxcvbn</h1>
+    <div class="row">
+        <h1>Foundation 5 Password Strength Meter Example - zxcvbn</h1>
         <form role="form" style="margin-bottom: 20px;">
             <div class="row" id="pwd-container">
-                <div class="col-sm-4">
+                <div class="columns medium-4">
                     <div class="form-group">
                         <label for="username">Username</label>
                         <input type="text" class="form-control" id="username" placeholder="Username" value="ieyasu">
@@ -27,7 +27,7 @@
                         <input type="password" class="form-control" id="password" placeholder="Password">
                     </div>
                 </div>
-                <div class="col-sm-6 col-sm-offset-2 my-help-text">
+                <div class="columns medium-6 medium-offset-2 my-help-text">
                     <span class="pwstrength_viewport_progress"></span> <span class="pwstrength_viewport_verdict"></span>
                 </div>
             </div>
@@ -35,7 +35,7 @@
                 <div id="messages" class="col-sm-12"></div>
             </div>
         </form>
-        <p><a href="..">Go back</a></p>
+        <p><a href="../index.html">Go back</a></p>
     </div>
 
     <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>

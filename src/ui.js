@@ -2,7 +2,7 @@
 /*global jQuery */
 
 /*
-* jQuery Password Strength plugin for Twitter Bootstrap
+* jQuery Password Strength plugin for Zurb Foundation
 *
 * Copyright (c) 2008-2013 Tane Piper
 * Copyright (c) 2013 Alejandro Blanco
@@ -14,8 +14,8 @@ var ui = {};
 (function ($, ui) {
     "use strict";
 
-    var barClasses = ["danger", "warning", "success"],
-        statusClasses = ["error", "warning", "success"];
+    var barClasses = ["alert", "success", "success"],
+        statusClasses = ["alert", "warning", "success"];
 
     ui.getContainer = function (options, $el) {
         var $container;
@@ -53,7 +53,7 @@ var ui = {};
             if (!options.ui.showVerdictsInsideProgressBar) {
                 result.$verdict = ui.findElement($container, options.ui.viewports.verdict, "span.password-verdict");
             }
-            result.$errors = ui.findElement($container, options.ui.viewports.errors, "ul.error-list");
+            result.$errors = ui.findElement($container, options.ui.viewports.errors, ".error");
         }
 
         options.instances.viewports = result;
@@ -62,12 +62,7 @@ var ui = {};
 
     ui.initProgressBar = function (options, $el) {
         var $container = ui.getContainer(options, $el),
-            progressbar = "<div class='progress'><div class='";
-
-        if (!options.ui.bootstrap2) {
-            progressbar += "progress-";
-        }
-        progressbar += "bar'>";
+            progressbar = "<div class='progress'><div class='meter' style='width:0%'>";
         if (options.ui.showVerdictsInsideProgressBar) {
             progressbar += "<span class='password-verdict'></span>";
         }
@@ -95,7 +90,7 @@ var ui = {};
     };
 
     ui.initErrorList = function (options, $el) {
-        ui.initHelper(options, $el, "<ul class='error-list'></ul>",
+        ui.initHelper(options, $el, "<small class='error' style='display:none;'></small>",
                         options.ui.viewports.errors);
     };
 
@@ -123,22 +118,16 @@ var ui = {};
         }
     };
 
-    ui.possibleProgressBarClasses = ["danger", "warning", "success"];
+    ui.possibleProgressBarClasses = ["alert", "warning", "success"];
 
     ui.updateProgressBar = function (options, $el, cssClass, percentage) {
         var $progressbar = ui.getUIElements(options, $el).$progressbar,
-            $bar = $progressbar.find(".progress-bar"),
-            cssPrefix = "progress-";
-
-        if (options.ui.bootstrap2) {
-            $bar = $progressbar.find(".bar");
-            cssPrefix = "";
-        }
+            $bar = $progressbar.find(".meter");
 
         $.each(ui.possibleProgressBarClasses, function (idx, value) {
-            $bar.removeClass(cssPrefix + "bar-" + value);
+            $progressbar.removeClass(value);
         });
-        $bar.addClass(cssPrefix + "bar-" + barClasses[cssClass]);
+        $progressbar.addClass(barClasses[cssClass]);
         $bar.css("width", percentage + '%');
     };
 
@@ -148,11 +137,21 @@ var ui = {};
     };
 
     ui.updateErrors = function (options, $el) {
-        var $errors = ui.getUIElements(options, $el).$errors,
+        var $container = ui.getContainer(options, $el),
+            $errors = ui.getUIElements(options, $el).$errors,
             html = "";
         $.each(options.instances.errors, function (idx, err) {
-            html += "<li>" + err + "</li>";
+            html += err + "<br>";
         });
+
+        if (html !== "") {
+            $container.addClass('error');
+            $errors.show();
+        } else {
+            $container.removeClass('error');
+            $errors.hide();
+        }
+
         $errors.html(html);
     };
 
@@ -182,8 +181,6 @@ var ui = {};
             return;
         }
 
-        if (options.ui.bootstrap2) { popover = $el.data("popover"); }
-
         if (popover.$arrow && popover.$arrow.parents("body").length > 0) {
             $el.find("+ .popover .popover-content").html(html);
         } else {
@@ -194,16 +191,14 @@ var ui = {};
     };
 
     ui.updateFieldStatus = function (options, $el, cssClass) {
-        var targetClass = options.ui.bootstrap2 ? ".control-group" : ".form-group",
-            $container = $el.parents(targetClass).first();
+
+        var $container = options.ui.viewports.status ? $(options.ui.viewports.status) : ui.getContainer(options, $el);
 
         $.each(statusClasses, function (idx, css) {
-            if (!options.ui.bootstrap2) { css = "has-" + css; }
             $container.removeClass(css);
         });
 
         cssClass = statusClasses[cssClass];
-        if (!options.ui.bootstrap2) { cssClass = "has-" + cssClass; }
         $container.addClass(cssClass);
     };
 

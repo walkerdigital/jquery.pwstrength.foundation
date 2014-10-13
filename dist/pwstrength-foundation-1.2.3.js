@@ -1,8 +1,9 @@
 /*!
-* jQuery Password Strength plugin for Twitter Bootstrap
+* jQuery Password Strength plugin for Zurb Foundation
 *
 * Copyright (c) 2008-2013 Tane Piper
 * Copyright (c) 2013 Alejandro Blanco
+* Copyright (c) 2014 Ed Townend
 * Dual licensed under the MIT and GPL licenses.
 */
 
@@ -16,7 +17,9 @@ var rulesEngine = {};
 
 try {
     if (!jQuery && module && module.exports) {
-        var jQuery = require("jquery");
+        var jQuery = require("jquery"),
+            jsdom = require("jsdom").jsdom;
+        jQuery = jQuery(jsdom().parentWindow);
     }
 } catch (ignore) {}
 
@@ -25,15 +28,15 @@ try {
     var validation = {};
 
     rulesEngine.forbiddenSequences = [
-        "0123456789", "9876543210", "abcdefghijklmnopqrstuvxywz",
-        "qwertyuiop", "asdfghjkl", "zxcvbnm"
+        "0123456789", "abcdefghijklmnopqrstuvwxyz", "qwertyuiop", "asdfghjkl",
+        "zxcvbnm", "!@#$%^&*()_+"
     ];
 
     validation.wordNotEmail = function (options, word, score) {
         if (word.match(/^([\w\!\#$\%\&\'\*\+\-\/\=\?\^\`{\|\}\~]+\.)*[\w\!\#$\%\&\'\*\+\-\/\=\?\^\`{\|\}\~]+@((((([a-z0-9]{1}[a-z0-9\-]{0,62}[a-z0-9]{1})|[a-z])\.)+[a-z]{2,6})|(\d{1,3}\.){3}\d{1,3}(\:\d{1,5})?)$/i)) {
-            options.instances.errors.push(options.ui.spanError(options, "email_as_password"));
             return score;
         }
+        return 0;
     };
 
     validation.wordLength = function (options, word, score) {
@@ -41,7 +44,6 @@ try {
             lenScore = Math.pow(wordlen, options.rules.raisePower);
         if (wordlen < options.common.minChar) {
             lenScore = (lenScore + score);
-            options.instances.errors.push(options.ui.spanError(options, "password_too_short"));
         }
         return lenScore;
     };
@@ -49,10 +51,9 @@ try {
     validation.wordSimilarToUsername = function (options, word, score) {
         var username = $(options.common.usernameField).val();
         if (username && word.toLowerCase().match(username.toLowerCase())) {
-            options.instances.errors.push(options.ui.spanError(options, "same_as_username"));
             return score;
         }
-        return false;
+        return 0;
     };
 
     validation.wordTwoCharacterClasses = function (options, word, score) {
@@ -61,35 +62,31 @@ try {
                 (word.match(/(.[!,@,#,$,%,\^,&,*,?,_,~])/) && word.match(/[a-zA-Z0-9_]/))) {
             return score;
         }
-        options.instances.errors.push(options.ui.spanError(options, "two_character_classes"));
-        return false;
+        return 0;
     };
 
     validation.wordRepetitions = function (options, word, score) {
-        if (word.match(/(.)\1\1/)) {
-            options.instances.errors.push(options.ui.spanError(options, "repeated_character"));
-            return score;
-        }
-        return false;
+        if (word.match(/(.)\1\1/)) { return score; }
+        return 0;
     };
 
     validation.wordSequences = function (options, word, score) {
         var found = false,
             j;
         if (word.length > 2) {
-            $.each(rulesEngine.forbiddenSequences, function (idx, sequence) {
-                for (j = 0; j < (word.length - 3); j += 1) { //iterate the word trough a sliding window of size 3:
-                    if (sequence.indexOf(word.toLowerCase().substring(j, j + 3)) > -1) {
-                        found = true;
+            $.each(rulesEngine.forbiddenSequences, function (idx, seq) {
+                var sequences = [seq, seq.split('').reverse().join('')];
+                $.each(sequences, function (idx, sequence) {
+                    for (j = 0; j < (word.length - 2); j += 1) { // iterate the word trough a sliding window of size 3:
+                        if (sequence.indexOf(word.toLowerCase().substring(j, j + 3)) > -1) {
+                            found = true;
+                        }
                     }
-                }
+                });
             });
-            if (found) {
-                options.instances.errors.push(options.ui.spanError(options, "sequence_found"));
-                return score;
-            }
+            if (found) { return score; }
         }
-        return false;
+        return 0;
     };
 
     validation.wordLowercase = function (options, word, score) {
@@ -137,7 +134,8 @@ try {
             if (active) {
                 var score = options.rules.scores[rule],
                     funct = rulesEngine.validation[rule],
-                    result;
+                    result,
+                    errorMessage;
 
                 if (!$.isFunction(funct)) {
                     funct = options.rules.extra[rule];
@@ -147,6 +145,12 @@ try {
                     result = funct(options, word, score);
                     if (result) {
                         totalScore += result;
+                    }
+                    if (result < 0 || (!$.isNumeric(result) && !result)) {
+                        errorMessage = options.ui.spanError(options, rule);
+                        if (errorMessage.length > 0) {
+                            options.instances.errors.push(errorMessage);
+                        }
                     }
                 }
             }
@@ -172,8 +176,13 @@ var defaultOptions = {};
 defaultOptions.common = {};
 defaultOptions.common.minChar = 6;
 defaultOptions.common.usernameField = "#username";
+defaultOptions.common.userInputs = [
+    // Selectors for input fields with user input
+];
 defaultOptions.common.onLoad = undefined;
 defaultOptions.common.onKeyUp = undefined;
+defaultOptions.common.zxcvbn = false;
+defaultOptions.common.debug = false;
 
 defaultOptions.rules = {};
 defaultOptions.rules.extra = {};
@@ -214,29 +223,35 @@ defaultOptions.rules.activated = {
 defaultOptions.rules.raisePower = 1.4;
 
 defaultOptions.ui = {};
-defaultOptions.ui.bootstrap2 = false;
+// defaultOptions.ui.bootstrap2 = false;
+defaultOptions.ui.showProgressBar = true;
 defaultOptions.ui.showPopover = false;
+defaultOptions.ui.showStatus = false;
 defaultOptions.ui.spanError = function (options, key) {
     "use strict";
     var text = options.ui.errorMessages[key];
-    return '<span style="color: #d52929">' + text + '</span>';
+    if (!text) { return ''; }
+    // return '<span style="color: #d52929">' + text + '</span>';
+    return text;
 };
 defaultOptions.ui.errorMessages = {
-    password_too_short: "The Password is too short",
-    email_as_password: "Do not use your email as your password",
-    same_as_username: "Your password cannot contain your username",
-    two_character_classes: "Use different character classes",
-    repeated_character: "Too many repetitions",
-    sequence_found: "Your password contains sequences"
+    wordLength: "Your password is too short",
+    wordNotEmail: "Do not use your email as your password",
+    wordSimilarToUsername: "Your password cannot contain your username",
+    wordTwoCharacterClasses: "Use different character classes",
+    wordRepetitions: "Too many repetitions",
+    wordSequences: "Your password contains sequences"
 };
 defaultOptions.ui.verdicts = ["Weak", "Normal", "Medium", "Strong", "Very Strong"];
 defaultOptions.ui.showVerdicts = true;
-defaultOptions.ui.showErrors = false;
+defaultOptions.ui.showVerdictsInsideProgressBar = false;
+defaultOptions.ui.showErrors = true;
 defaultOptions.ui.container = undefined;
 defaultOptions.ui.viewports = {
     progress: undefined,
-    verdict: undefined,
-    errors: undefined
+    verdict: '.postfix',
+    errors: undefined,
+    status: undefined
 };
 defaultOptions.ui.scores = [14, 26, 38, 50];
 
@@ -249,6 +264,9 @@ var ui = {};
 
 (function ($, ui) {
     "use strict";
+
+    var barClasses = ["alert", "success", "success"],
+        statusClasses = ["alert", "warning", "success"];
 
     ui.getContainer = function (options, $el) {
         var $container;
@@ -274,12 +292,19 @@ var ui = {};
             return options.instances.viewports;
         }
 
-        result = {};
         $container = ui.getContainer(options, $el);
+
+        result = {};
         result.$progressbar = ui.findElement($container, options.ui.viewports.progress, "div.progress");
+        if (options.ui.showVerdictsInsideProgressBar) {
+            result.$verdict = result.$progressbar.find("span.password-verdict");
+        }
+
         if (!options.ui.showPopover) {
-            result.$verdict = ui.findElement($container, options.ui.viewports.verdict, "span.password-verdict");
-            result.$errors = ui.findElement($container, options.ui.viewports.errors, "ul.error-list");
+            if (!options.ui.showVerdictsInsideProgressBar) {
+                result.$verdict = ui.findElement($container, options.ui.viewports.verdict, "span.password-verdict");
+            }
+            result.$errors = ui.findElement($container, options.ui.viewports.errors, ".error");
         }
 
         options.instances.viewports = result;
@@ -288,12 +313,11 @@ var ui = {};
 
     ui.initProgressBar = function (options, $el) {
         var $container = ui.getContainer(options, $el),
-            progressbar = "<div class='progress'><div class='";
-
-        if (!options.ui.bootstrap2) {
-            progressbar += "progress-";
+            progressbar = "<div class='progress'><div class='meter' style='width:0%'>";
+        if (options.ui.showVerdictsInsideProgressBar) {
+            progressbar += "<span class='password-verdict'></span>";
         }
-        progressbar += "bar'></div></div>";
+        progressbar += "</div></div>";
 
         if (options.ui.viewports.progress) {
             $container.find(options.ui.viewports.progress).append(progressbar);
@@ -317,65 +341,44 @@ var ui = {};
     };
 
     ui.initErrorList = function (options, $el) {
-        ui.initHelper(options, $el, "<ul class='error-list'></ul>",
+        ui.initHelper(options, $el, "<small class='error' style='display:none;'></small>",
                         options.ui.viewports.errors);
     };
 
-    ui.initPopover = function (options, $el, verdictText) {
-        var placement = "auto top",
-            html = "";
-
-        if (options.ui.bootstrap2) { placement = "top"; }
-
-        if (options.ui.showVerdicts && verdictText.length > 0) {
-            html = "<h5><span class='password-verdict'>" + verdictText +
-                "</span></h5>";
-        }
-        if (options.ui.showErrors) {
-            html += "<div><ul class='error-list'>";
-            $.each(options.instances.errors, function (idx, err) {
-                html += "<li>" + err + "</li>";
-            });
-            html += "</ul></div>";
-        }
-
+    ui.initPopover = function (options, $el) {
         $el.popover("destroy");
         $el.popover({
             html: true,
-            placement: placement,
+            placement: "bottom",
             trigger: "manual",
-            content: html
+            content: " "
         });
-        $el.popover("show");
     };
 
     ui.initUI = function (options, $el) {
-        if (!options.ui.showPopover) {
+        if (options.ui.showPopover) {
+            ui.initPopover(options, $el);
+        } else {
             if (options.ui.showErrors) { ui.initErrorList(options, $el); }
-            if (options.ui.showVerdicts) { ui.initVerdict(options, $el); }
+            if (options.ui.showVerdicts && !options.ui.showVerdictsInsideProgressBar) {
+                ui.initVerdict(options, $el);
+            }
         }
-        // The popover can't be initialized here, it requires to be destroyed
-        // and recreated every time its content changes, because it calculates
-        // its position based on the size of its content
-        ui.initProgressBar(options, $el);
+        if (options.ui.showProgressBar) {
+            ui.initProgressBar(options, $el);
+        }
     };
 
-    ui.possibleProgressBarClasses = ["danger", "warning", "success"];
+    ui.possibleProgressBarClasses = ["alert", "warning", "success"];
 
     ui.updateProgressBar = function (options, $el, cssClass, percentage) {
         var $progressbar = ui.getUIElements(options, $el).$progressbar,
-            $bar = $progressbar.find(".progress-bar"),
-            cssPrefix = "progress-";
-
-        if (options.ui.bootstrap2) {
-            $bar = $progressbar.find(".bar");
-            cssPrefix = "";
-        }
+            $bar = $progressbar.find(".meter");
 
         $.each(ui.possibleProgressBarClasses, function (idx, value) {
-            $bar.removeClass(cssPrefix + "bar-" + value);
+            $progressbar.removeClass(value);
         });
-        $bar.addClass(cssPrefix + "bar-" + cssClass);
+        $progressbar.addClass(barClasses[cssClass]);
         $bar.css("width", percentage + '%');
     };
 
@@ -385,12 +388,69 @@ var ui = {};
     };
 
     ui.updateErrors = function (options, $el) {
-        var $errors = ui.getUIElements(options, $el).$errors,
+        var $container = ui.getContainer(options, $el),
+            $errors = ui.getUIElements(options, $el).$errors,
             html = "";
         $.each(options.instances.errors, function (idx, err) {
-            html += "<li>" + err + "</li>";
+            html += err + "<br>";
         });
+
+        if (html !== "") {
+            $container.addClass('error');
+            $errors.show();
+        } else {
+            $container.removeClass('error');
+            $errors.hide();
+        }
+
         $errors.html(html);
+    };
+
+    ui.updatePopover = function (options, $el, verdictText) {
+        var popover = $el.data("bs.popover"),
+            html = "",
+            hide = true;
+
+        if (options.ui.showVerdicts &&
+                !options.ui.showVerdictsInsideProgressBar &&
+                verdictText.length > 0) {
+            html = "<h5><span class='password-verdict'>" + verdictText +
+                "</span></h5>";
+            hide = false;
+        }
+        if (options.ui.showErrors) {
+            html += "<div>Errors:<ul class='error-list' style='margin-bottom: 0;'>";
+            $.each(options.instances.errors, function (idx, err) {
+                html += "<li>" + err + "</li>";
+                hide = false;
+            });
+            html += "</ul></div>";
+        }
+
+        if (hide) {
+            $el.popover("hide");
+            return;
+        }
+
+        if (popover.$arrow && popover.$arrow.parents("body").length > 0) {
+            $el.find("+ .popover .popover-content").html(html);
+        } else {
+            // It's hidden
+            popover.options.content = html;
+            $el.popover("show");
+        }
+    };
+
+    ui.updateFieldStatus = function (options, $el, cssClass) {
+
+        var $container = options.ui.viewports.status ? $(options.ui.viewports.status) : ui.getContainer(options, $el);
+
+        $.each(statusClasses, function (idx, css) {
+            $container.removeClass(css);
+        });
+
+        cssClass = statusClasses[cssClass];
+        $container.addClass(cssClass);
     };
 
     ui.percentage = function (score, maximun) {
@@ -400,36 +460,61 @@ var ui = {};
         return result;
     };
 
-    ui.updateUI = function (options, $el, score) {
-        var barCss, barPercentage, verdictText;
+    ui.getVerdictAndCssClass = function (options, score) {
+        var cssClass, verdictText, level;
 
-        barPercentage = ui.percentage(score, options.ui.scores[3]);
         if (score <= 0) {
-            barCss = "danger";
-            verdictText = "";
+            cssClass = 0;
+            level = -1;
+            verdictText = options.ui.verdicts[0];
         } else if (score < options.ui.scores[0]) {
-            barCss = "danger";
+            cssClass = 0;
+            level = 0;
             verdictText = options.ui.verdicts[0];
         } else if (score < options.ui.scores[1]) {
-            barCss = "danger";
+            cssClass = 0;
+            level = 1;
             verdictText = options.ui.verdicts[1];
         } else if (score < options.ui.scores[2]) {
-            barCss = "warning";
+            cssClass = 1;
+            level = 2;
             verdictText = options.ui.verdicts[2];
         } else if (score < options.ui.scores[3]) {
-            barCss = "warning";
+            cssClass = 1;
+            level = 3;
             verdictText = options.ui.verdicts[3];
         } else {
-            barCss = "success";
+            cssClass = 2;
+            level = 4;
             verdictText = options.ui.verdicts[4];
         }
 
-        ui.updateProgressBar(options, $el, barCss, barPercentage);
+        return [verdictText, cssClass, level];
+    };
+
+    ui.updateUI = function (options, $el, score) {
+        var cssClass, barPercentage, verdictText;
+
+        cssClass = ui.getVerdictAndCssClass(options, score);
+        verdictText = cssClass[0];
+        cssClass = cssClass[1];
+
+        if (options.ui.showProgressBar) {
+            barPercentage = ui.percentage(score, options.ui.scores[3]);
+            ui.updateProgressBar(options, $el, cssClass, barPercentage);
+            if (options.ui.showVerdictsInsideProgressBar) {
+                ui.updateVerdict(options, $el, verdictText);
+            }
+        }
+
+        if (options.ui.showStatus) {
+            ui.updateFieldStatus(options, $el, cssClass);
+        }
+
         if (options.ui.showPopover) {
-            // Popover can't be updated, it has to be recreated
-            ui.initPopover(options, $el, verdictText);
+            ui.updatePopover(options, $el, verdictText);
         } else {
-            if (options.ui.showVerdicts) {
+            if (options.ui.showVerdicts && !options.ui.showVerdictsInsideProgressBar) {
                 ui.updateVerdict(options, $el, verdictText);
             }
             if (options.ui.showErrors) {
@@ -452,16 +537,39 @@ var methods = {};
 
     onKeyUp = function (event) {
         var $el = $(event.target),
-            options = $el.data("pwstrength-bootstrap"),
+            options = $el.data("pwstrength-foundation"),
             word = $el.val(),
+            userInputs,
+            verdictText,
+            verdictLevel,
             score;
 
+        if (options === undefined) { return; }
+
         options.instances.errors = [];
-        score = rulesEngine.executeRules(options, word);
+        if (options.common.zxcvbn) {
+            userInputs = [];
+            $.each(options.common.userInputs, function (idx, selector) {
+                userInputs.push($(selector).val());
+            });
+            userInputs.push($(options.common.usernameField).val());
+            score = zxcvbn(word, userInputs).entropy;
+        } else {
+            score = rulesEngine.executeRules(options, word);
+        }
         ui.updateUI(options, $el, score);
+        verdictText = ui.getVerdictAndCssClass(options, score);
+        verdictLevel = verdictText[2];
+        verdictText = verdictText[0];
+
+        if (options.common.debug) { console.log(score + ' - ' + verdictText); }
 
         if ($.isFunction(options.common.onKeyUp)) {
-            options.common.onKeyUp(event);
+            options.common.onKeyUp(event, {
+                score: score,
+                verdictText: verdictText,
+                verdictLevel: verdictLevel
+            });
         }
     };
 
@@ -474,9 +582,16 @@ var methods = {};
                 $el = $(el);
 
             localOptions.instances = {};
-            $el.data("pwstrength-bootstrap", localOptions);
+            $el.data("pwstrength-foundation", localOptions);
             $el.on("keyup", onKeyUp);
+            $el.on("change", onKeyUp);
+            $el.on("onpaste", onKeyUp);
+
             ui.initUI(localOptions, $el);
+            if ($.trim($el.val())) { // Not empty, calculate the strength
+                $el.trigger("keyup");
+            }
+
             if ($.isFunction(localOptions.common.onLoad)) {
                 localOptions.common.onLoad();
             }
@@ -488,12 +603,12 @@ var methods = {};
     methods.destroy = function () {
         this.each(function (idx, el) {
             var $el = $(el),
-                options = $el.data("pwstrength-bootstrap"),
+                options = $el.data("pwstrength-foundation"),
                 elements = ui.getUIElements(options, $el);
             elements.$progressbar.remove();
             elements.$verdict.remove();
             elements.$errors.remove();
-            $el.removeData("pwstrength-bootstrap");
+            $el.removeData("pwstrength-foundation");
         });
     };
 
@@ -506,7 +621,7 @@ var methods = {};
 
     methods.addRule = function (name, method, score, active) {
         this.each(function (idx, el) {
-            var options = $(el).data("pwstrength-bootstrap");
+            var options = $(el).data("pwstrength-foundation");
 
             options.rules.activated[name] = active;
             options.rules.scores[name] = score;
@@ -516,7 +631,7 @@ var methods = {};
 
     applyToAll = function (rule, prop, value) {
         this.each(function (idx, el) {
-            $(el).data("pwstrength-bootstrap").rules[prop][rule] = value;
+            $(el).data("pwstrength-foundation").rules[prop][rule] = value;
         });
     };
 
@@ -536,7 +651,7 @@ var methods = {};
         } else if (typeof method === "object" || !method) {
             result = methods.init.apply(this, arguments);
         } else {
-            $.error("Method " +  method + " does not exist on jQuery.pwstrength-bootstrap");
+            $.error("Method " +  method + " does not exist on jQuery.pwstrength-foundation");
         }
 
         return result;

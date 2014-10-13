@@ -1,18 +1,18 @@
 {
-    "name": "pwstrength-bootstrap",
-    "version": "1.2.2",
-    "author": "Alejandro Blanco <alejandro.b.e@gmail.com>",
+    "name": "pwstrength-foundation",
+    "version": "1.2.3",
+    "author": "Ed Townend <eddie@teamtownend.com>",
     "repository": {
         "type": "git",
-        "url": "https://github.com/ablanco/jquery.pwstrength.bootstrap"
+        "url": "https://github.com/edtownend/jquery.pwstrength.foundation"
     },
     "licenses" : [
         {
             "type" : "GPL v3",
-            "url" : "https://raw.github.com/ablanco/jquery.pwstrength.bootstrap/master/GPL-LICENSE.txt"
+            "url" : "https://raw.github.com/edtownend/jquery.pwstrength.foundation/master/GPL-LICENSE.txt"
         }, {
             "type": "MIT",
-            "url": "https://raw.github.com/ablanco/jquery.pwstrength.bootstrap/master/MIT-LICENSE.txt"
+            "url": "https://raw.github.com/edtownend/jquery.pwstrength.foundation/master/MIT-LICENSE.txt"
         }
     ],
     "scripts": {
