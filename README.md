@@ -10,7 +10,7 @@ password.
 
 Forked from ablanco/jquery.pwstrength.bootstrap - all I've done is change the outputted syntax
 
-Available on GitHub as pwstrength-foundation
+Available on Bower as pwstrength-foundation
 
 Dual licensed under the MIT and GPL licenses.
 
