@@ -7,6 +7,7 @@ module.exports = function (grunt) {
     var license =
         '/*!\n' +
         '* jQuery Password Strength plugin for Zurb Foundation\n' +
+        '* <%= grunt.template.today("yyyy-mm-dd") %>\n' +
         '*\n' +
         '* Copyright (c) 2008-2013 Tane Piper\n' +
         '* Copyright (c) 2013 Alejandro Blanco\n' +
