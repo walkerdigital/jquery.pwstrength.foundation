@@ -1,12 +1,12 @@
 {
     "name": "pwstrength-foundation",
-    "version": "1.2.3",
+    "version": "1.2.4",
     "homepage": "https://github.com/edtownend/jquery.pwstrength.foundation",
     "authors": [
         "Ed Townend <eddie@teamtownend.com>"
     ],
     "description": "jQuery plugin for Zurb Foundation 5 that provides rulesets for visualy displaying the quality of a users typed in password.",
-    "main": "dist/pwstrength-foundation-1.2.2.js",
+    "main": "dist/pwstrength-foundation-1.2.4.js",
     "dependencies": {
         "jquery": ">=1.7.0",
         "foundation": ">=2.0.0"

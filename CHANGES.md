@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 1.2.4
+
+- Standardise name on pwstrength-foundation
+- Fixed zxcvbn demo
+- Now on bower
+
 ## 1.2.3
 
 - First release to support Zurb Foundation, forked from ablanco/jquery.pwstrength.bootstrap v 1.2.2

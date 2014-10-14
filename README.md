@@ -6,7 +6,11 @@
 
 The jQuery Password Strength Meter is a plugin for Zurb Foundation 5 that
 provides rulesets for visualy displaying the quality of a users typed in
-password. Forked from ablanco/jquery.pwstrength.bootstrap - all I've done is change the outputted syntax
+password.
+
+Forked from ablanco/jquery.pwstrength.bootstrap - all I've done is change the outputted syntax
+
+Available on GitHub as pwstrength-foundation
 
 Dual licensed under the MIT and GPL licenses.
 
@@ -205,6 +209,8 @@ Let's see the options of each section.
 
   If the `showVerdictsInsideProgressBar` option is active, then the verdicts
   won't appear on the popover.
+
+  *Not currently functional - coming soon*
 
 * __showStatus__:
 
