@@ -169,12 +169,11 @@ var ui = {};
             hide = false;
         }
         if (options.ui.showErrors) {
-            html += "<div>Errors:<ul class='error-list' style='margin-bottom: 0;'>";
-            $.each(options.instances.errors, function (idx, err) {
-                html += "<li>" + err + "</li>";
+            if (options.instances.errors.length > 0) {
                 hide = false;
-            });
-            html += "</ul></div>";
+            }
+
+            html += options.ui.popoverError(options.instances.errors);
         }
 
         if (hide) {
