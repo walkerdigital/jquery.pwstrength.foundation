@@ -102,7 +102,7 @@ try {
     };
 
     validation.wordOneSpecialChar = function (options, word, score) {
-        return word.match(/.[!,@,#,$,%,\^,&,*,?,_,~]/) && score;
+        return word.match(/[!,@,#,$,%,\^,&,*,?,_,~]/) && score;
     };
 
     validation.wordTwoSpecialChar = function (options, word, score) {
