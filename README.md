@@ -234,6 +234,22 @@ Let's see the options of each section.
   Function to generate a span with the style property set to red font color,
   used in the errors messages. Overwrite for custom styling.
 
+* __popoverError__:
+
+  Default: (Function)
+
+  ```javascript
+  function (errors) {
+    var message = "<div>Errors:<ul class='error-list' style='margin-bottom: 0;'>";
+    jQuery.each(errors, function (idx, err) { message += "<li>" + err + "</li>"; });
+    message += "</ul></div>";
+    return message;
+  };
+  ```
+
+  Function to generate the errors list in the popover if showPopover is true. 
+  Overwrite for custom styling.
+
 * __errorMessages__:
 
   Default: (Object)
