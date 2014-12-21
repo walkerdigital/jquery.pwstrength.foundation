@@ -3,6 +3,7 @@
 ## 1.2.3
 
 - New option to customize the html of the popover with the errors.
+- Bugfix in special char regex.
 
 ## 1.2.2
 
