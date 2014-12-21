@@ -247,7 +247,7 @@ Let's see the options of each section.
   };
   ```
 
-  Function to generate the errors list in the popover if showPopover is true. 
+  Function to generate the errors list in the popover if `showPopover` is true.
   Overwrite for custom styling.
 
 * __errorMessages__:

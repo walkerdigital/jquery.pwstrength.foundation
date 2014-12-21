@@ -1,5 +1,5 @@
-/*jslint browser: true */
-/*global */
+/*jslint browser: true, unparam: true */
+/*global jQuery */
 
 /*
 * jQuery Password Strength plugin for Twitter Bootstrap
@@ -75,7 +75,6 @@ defaultOptions.ui.popoverError = function (errors) {
     "use strict";
     var message = "<div>Errors:<ul class='error-list' style='margin-bottom: 0;'>";
 
-    /*jslint unparam: true*/
     jQuery.each(errors, function (idx, err) {
         message += "<li>" + err + "</li>";
     });

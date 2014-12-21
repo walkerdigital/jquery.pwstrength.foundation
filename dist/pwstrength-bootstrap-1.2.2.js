@@ -232,17 +232,6 @@ defaultOptions.ui.spanError = function (options, key) {
     if (!text) { return ''; }
     return '<span style="color: #d52929">' + text + '</span>';
 };
-defaultOptions.ui.popoverError = function (errors) {
-    "use strict";
-    var message = "<div>Errors:<ul class='error-list' style='margin-bottom: 0;'>";
-
-    
-    jQuery.each(errors, function (idx, err) {
-        message += "<li>" + err + "</li>";
-    });
-    message += "</ul></div>";
-    return message;
-};
 defaultOptions.ui.errorMessages = {
     wordLength: "Your password is too short",
     wordNotEmail: "Do not use your email as your password",
@@ -428,11 +417,12 @@ var ui = {};
             hide = false;
         }
         if (options.ui.showErrors) {
-            if (options.instances.errors.length > 0) {
+            html += "<div>Errors:<ul class='error-list' style='margin-bottom: 0;'>";
+            $.each(options.instances.errors, function (idx, err) {
+                html += "<li>" + err + "</li>";
                 hide = false;
-            }
-
-            html += options.ui.popoverError(options.instances.errors);
+            });
+            html += "</ul></div>";
         }
 
         if (hide) {

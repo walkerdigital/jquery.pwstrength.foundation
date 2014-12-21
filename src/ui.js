@@ -172,7 +172,6 @@ var ui = {};
             if (options.instances.errors.length > 0) {
                 hide = false;
             }
-
             html += options.ui.popoverError(options.instances.errors);
         }
 

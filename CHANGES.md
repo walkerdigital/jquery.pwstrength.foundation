@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 1.2.3
+
+- New option to customize the html of the popover with the errors.
+
 ## 1.2.2
 
 - Every rule can have associated error messages.
