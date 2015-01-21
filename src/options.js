@@ -92,6 +92,7 @@ defaultOptions.ui.errorMessages = {
 defaultOptions.ui.verdicts = ["Weak", "Normal", "Medium", "Strong", "Very Strong"];
 defaultOptions.ui.showVerdicts = true;
 defaultOptions.ui.showVerdictsInsideProgressBar = false;
+defaultOptions.ui.useVerdictCssClass = false;
 defaultOptions.ui.showErrors = false;
 defaultOptions.ui.container = undefined;
 defaultOptions.ui.viewports = {

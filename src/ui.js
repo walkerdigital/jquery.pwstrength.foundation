@@ -142,8 +142,12 @@ var ui = {};
         $bar.css("width", percentage + '%');
     };
 
-    ui.updateVerdict = function (options, $el, text) {
+    ui.updateVerdict = function (options, $el, cssClass, text) {
         var $verdict = ui.getUIElements(options, $el).$verdict;
+        $verdict.removeClass(barClasses.join(' '));
+        if (cssClass > -1) {
+            $verdict.addClass(barClasses[cssClass]);
+        }
         $verdict.text(text);
     };
 
@@ -255,7 +259,7 @@ var ui = {};
             barPercentage = ui.percentage(score, options.ui.scores[3]);
             ui.updateProgressBar(options, $el, cssClass, barPercentage);
             if (options.ui.showVerdictsInsideProgressBar) {
-                ui.updateVerdict(options, $el, verdictText);
+                ui.updateVerdict(options, $el, options.ui.useVerdictCssClass ? cssClass : -1, verdictText);
             }
         }
 
@@ -267,7 +271,7 @@ var ui = {};
             ui.updatePopover(options, $el, verdictText);
         } else {
             if (options.ui.showVerdicts && !options.ui.showVerdictsInsideProgressBar) {
-                ui.updateVerdict(options, $el, verdictText);
+                ui.updateVerdict(options, $el, options.ui.useVerdictCssClass ? cssClass : -1, verdictText);
             }
             if (options.ui.showErrors) {
                 ui.updateErrors(options, $el);

@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 1.2.4
+
+- New option to add a class in verdict element.
+
 ## 1.2.3
 
 - New option to customize the html of the popover with the errors.
