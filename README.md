@@ -291,6 +291,12 @@ Let's see the options of each section.
   on the popover if it is being showed. Also this option overrides the value of
   the _showVerdicts_ one.
 
+* __useVerdictCssClass__:
+
+  Default: `false` (Boolean)
+
+  Determines if it's necessary to add a class in verdict element.
+
 * __showErrors__:
 
   Default: `false` (Boolean)
