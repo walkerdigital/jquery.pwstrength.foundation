@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## 1.2.4
+## 1.2.4dev
 
 - New option to add a class in verdict element.
 
