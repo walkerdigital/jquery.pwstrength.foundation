@@ -249,17 +249,18 @@ var ui = {};
     };
 
     ui.updateUI = function (options, $el, score) {
-        var cssClass, barPercentage, verdictText;
+        var cssClass, barPercentage, verdictText, verdictCssClass;
 
         cssClass = ui.getVerdictAndCssClass(options, score);
-        verdictText = cssClass[0];
+        verdictText = score === 0 ? '' : cssClass[0];
         cssClass = cssClass[1];
+        verdictCssClass = options.ui.useVerdictCssClass ? cssClass : -1;
 
         if (options.ui.showProgressBar) {
             barPercentage = ui.percentage(score, options.ui.scores[3]);
             ui.updateProgressBar(options, $el, cssClass, barPercentage);
             if (options.ui.showVerdictsInsideProgressBar) {
-                ui.updateVerdict(options, $el, options.ui.useVerdictCssClass ? cssClass : -1, verdictText);
+                ui.updateVerdict(options, $el, verdictCssClass, verdictText);
             }
         }
 
@@ -271,7 +272,7 @@ var ui = {};
             ui.updatePopover(options, $el, verdictText);
         } else {
             if (options.ui.showVerdicts && !options.ui.showVerdictsInsideProgressBar) {
-                ui.updateVerdict(options, $el, options.ui.useVerdictCssClass ? cssClass : -1, verdictText);
+                ui.updateVerdict(options, $el, verdictCssClass, verdictText);
             }
             if (options.ui.showErrors) {
                 ui.updateErrors(options, $el);
