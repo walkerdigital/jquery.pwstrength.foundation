@@ -407,7 +407,7 @@ var ui = {};
         if (cssClass > -1) {
             $verdict.addClass(barClasses[cssClass]);
         }
-        $verdict.text(text);
+        $verdict.html(text);
     };
 
     ui.updateErrors = function (options, $el) {
@@ -470,7 +470,7 @@ var ui = {};
 
     ui.percentage = function (score, maximun) {
         var result = Math.floor(100 * score / maximun);
-        result = result < 0 ? 0 : result;
+        result = result < 0 ? 1 : result; // Don't show the progress bar empty
         result = result > 100 ? 100 : result;
         return result;
     };
@@ -508,17 +508,18 @@ var ui = {};
     };
 
     ui.updateUI = function (options, $el, score) {
-        var cssClass, barPercentage, verdictText;
+        var cssClass, barPercentage, verdictText, verdictCssClass;
 
         cssClass = ui.getVerdictAndCssClass(options, score);
-        verdictText = cssClass[0];
+        verdictText = score === 0 ? '' : cssClass[0];
         cssClass = cssClass[1];
+        verdictCssClass = options.ui.useVerdictCssClass ? cssClass : -1;
 
         if (options.ui.showProgressBar) {
             barPercentage = ui.percentage(score, options.ui.scores[3]);
             ui.updateProgressBar(options, $el, cssClass, barPercentage);
             if (options.ui.showVerdictsInsideProgressBar) {
-                ui.updateVerdict(options, $el, options.ui.useVerdictCssClass ? cssClass : -1, verdictText);
+                ui.updateVerdict(options, $el, verdictCssClass, verdictText);
             }
         }
 
@@ -530,7 +531,7 @@ var ui = {};
             ui.updatePopover(options, $el, verdictText);
         } else {
             if (options.ui.showVerdicts && !options.ui.showVerdictsInsideProgressBar) {
-                ui.updateVerdict(options, $el, options.ui.useVerdictCssClass ? cssClass : -1, verdictText);
+                ui.updateVerdict(options, $el, verdictCssClass, verdictText);
             }
             if (options.ui.showErrors) {
                 ui.updateErrors(options, $el);
@@ -562,15 +563,19 @@ var methods = {};
         if (options === undefined) { return; }
 
         options.instances.errors = [];
-        if (options.common.zxcvbn) {
-            userInputs = [];
-            $.each(options.common.userInputs, function (idx, selector) {
-                userInputs.push($(selector).val());
-            });
-            userInputs.push($(options.common.usernameField).val());
-            score = zxcvbn(word, userInputs).entropy;
+        if (word.length === 0) {
+            score = 0;
         } else {
-            score = rulesEngine.executeRules(options, word);
+            if (options.common.zxcvbn) {
+                userInputs = [];
+                $.each(options.common.userInputs, function (idx, selector) {
+                    userInputs.push($(selector).val());
+                });
+                userInputs.push($(options.common.usernameField).val());
+                score = zxcvbn(word, userInputs).entropy;
+            } else {
+                score = rulesEngine.executeRules(options, word);
+            }
         }
         ui.updateUI(options, $el, score);
         verdictText = ui.getVerdictAndCssClass(options, score);

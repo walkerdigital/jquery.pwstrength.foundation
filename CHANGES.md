@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## 1.2.4dev
+## 1.2.4
 
 - New option to add a class in verdict element.
 - If there is text in the password field, don't show the progress bar empty.
