@@ -211,7 +211,7 @@ var ui = {};
 
     ui.percentage = function (score, maximun) {
         var result = Math.floor(100 * score / maximun);
-        result = result < 0 ? 0 : result;
+        result = result < 0 ? 1 : result; // Don't show the progress bar empty
         result = result > 100 ? 100 : result;
         return result;
     };

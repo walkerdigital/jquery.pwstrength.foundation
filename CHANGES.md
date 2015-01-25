@@ -3,6 +3,7 @@
 ## 1.2.4dev
 
 - New option to add a class in verdict element.
+- If there is text in the password field, don't show the progress bar empty.
 
 ## 1.2.3
 
