@@ -18,6 +18,16 @@ Dual licensed under the MIT and GPL licenses.
 * jQuery 1.7 or higher
 * Bootstrap 2 or 3
 
+### Not using Bootstrap?
+
+This plugin currently relies heavily on Bootstrap and it is not possible to
+use it with another framework without making big changes in the code or
+forgetting completely about the UI feedback.
+
+Forks to use it with another frameworks that I know of:
+
+* [Zurb Foundation fork by edtownend](https://github.com/edtownend/jquery.pwstrength.foundation)
+
 
 ## How to use it
 
