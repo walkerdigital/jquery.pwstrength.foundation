@@ -234,7 +234,8 @@ Let's see the options of each section.
   Default: `["Weak", "Normal", "Medium", "Strong", "Very Strong"]` (Array)
 
   The display names for the verdicts related to the progressClass. It has to
-  have 5 elements, and they would be the 5 possible strength categories.
+  have 5 elements, because there are 5 possible strength categories. It can be
+  html code.
 
 * __showVerdicts__:
 

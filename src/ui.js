@@ -148,7 +148,7 @@ var ui = {};
         if (cssClass > -1) {
             $verdict.addClass(barClasses[cssClass]);
         }
-        $verdict.text(text);
+        $verdict.html(text);
     };
 
     ui.updateErrors = function (options, $el) {

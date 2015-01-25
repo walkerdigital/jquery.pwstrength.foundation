@@ -4,6 +4,8 @@
 
 - New option to add a class in verdict element.
 - If there is text in the password field, don't show the progress bar empty.
+- Empty verdict for an empty password field.
+- Support html in the verdicts content.
 
 ## 1.2.3
 
