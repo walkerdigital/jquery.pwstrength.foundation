@@ -20,7 +20,8 @@ var ui = {};
     ui.getContainer = function (options, $el) {
         var $container;
 
-        $container = $(options.ui.container);
+        // try to detirmine right scope be searching upwards
+        $container = $el.parents(options.ui.container);
         if (!($container && $container.length === 1)) {
             $container = $el.parent();
         }
