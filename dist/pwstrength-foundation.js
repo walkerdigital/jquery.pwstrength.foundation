@@ -1,6 +1,6 @@
 /*!
 * jQuery Password Strength plugin for Zurb Foundation
-* 2014-10-14
+* 2015-01-29
 *
 * Copyright (c) 2008-2013 Tane Piper
 * Copyright (c) 2013 Alejandro Blanco
@@ -107,7 +107,7 @@ try {
     };
 
     validation.wordOneSpecialChar = function (options, word, score) {
-        return word.match(/.[!,@,#,$,%,\^,&,*,?,_,~]/) && score;
+        return word.match(/[!,@,#,$,%,\^,&,*,?,_,~]/) && score;
     };
 
     validation.wordTwoSpecialChar = function (options, word, score) {
@@ -232,8 +232,17 @@ defaultOptions.ui.spanError = function (options, key) {
     "use strict";
     var text = options.ui.errorMessages[key];
     if (!text) { return ''; }
-    // return '<span style="color: #d52929">' + text + '</span>';
     return text;
+};
+defaultOptions.ui.popoverError = function (errors) {
+    "use strict";
+    var message = "<div>Errors:<ul class='error-list' style='margin-bottom: 0;'>";
+
+    jQuery.each(errors, function (idx, err) {
+        message += "<li>" + err + "</li>";
+    });
+    message += "</ul></div>";
+    return message;
 };
 defaultOptions.ui.errorMessages = {
     wordLength: "Your password is too short",
@@ -246,13 +255,13 @@ defaultOptions.ui.errorMessages = {
 defaultOptions.ui.verdicts = ["Weak", "Normal", "Medium", "Strong", "Very Strong"];
 defaultOptions.ui.showVerdicts = true;
 defaultOptions.ui.showVerdictsInsideProgressBar = false;
-defaultOptions.ui.showErrors = true;
+defaultOptions.ui.useVerdictCssClass = false;
+defaultOptions.ui.showErrors = false;
 defaultOptions.ui.container = undefined;
 defaultOptions.ui.viewports = {
     progress: undefined,
     verdict: '.postfix',
-    errors: undefined,
-    status: undefined
+    errors: undefined
 };
 defaultOptions.ui.scores = [14, 26, 38, 50];
 
@@ -272,7 +281,8 @@ var ui = {};
     ui.getContainer = function (options, $el) {
         var $container;
 
-        $container = $(options.ui.container);
+        // try to detirmine right scope be searching upwards
+        $container = $el.parents(options.ui.container);
         if (!($container && $container.length === 1)) {
             $container = $el.parent();
         }
@@ -383,9 +393,13 @@ var ui = {};
         $bar.css("width", percentage + '%');
     };
 
-    ui.updateVerdict = function (options, $el, text) {
+    ui.updateVerdict = function (options, $el, cssClass, text) {
         var $verdict = ui.getUIElements(options, $el).$verdict;
-        $verdict.text(text);
+        $verdict.removeClass(barClasses.join(' '));
+        if (cssClass > -1) {
+            $verdict.addClass(barClasses[cssClass]);
+        }
+        $verdict.html(text);
     };
 
     ui.updateErrors = function (options, $el) {
@@ -420,12 +434,10 @@ var ui = {};
             hide = false;
         }
         if (options.ui.showErrors) {
-            html += "<div>Errors:<ul class='error-list' style='margin-bottom: 0;'>";
-            $.each(options.instances.errors, function (idx, err) {
-                html += "<li>" + err + "</li>";
+            if (options.instances.errors.length > 0) {
                 hide = false;
-            });
-            html += "</ul></div>";
+            }
+            html += options.ui.popoverError(options.instances.errors);
         }
 
         if (hide) {
@@ -456,7 +468,7 @@ var ui = {};
 
     ui.percentage = function (score, maximun) {
         var result = Math.floor(100 * score / maximun);
-        result = result < 0 ? 0 : result;
+        result = result < 0 ? 1 : result; // Don't show the progress bar empty
         result = result > 100 ? 100 : result;
         return result;
     };
@@ -494,17 +506,18 @@ var ui = {};
     };
 
     ui.updateUI = function (options, $el, score) {
-        var cssClass, barPercentage, verdictText;
+        var cssClass, barPercentage, verdictText, verdictCssClass;
 
         cssClass = ui.getVerdictAndCssClass(options, score);
-        verdictText = cssClass[0];
+        verdictText = score === 0 ? '' : cssClass[0];
         cssClass = cssClass[1];
+        verdictCssClass = options.ui.useVerdictCssClass ? cssClass : -1;
 
         if (options.ui.showProgressBar) {
             barPercentage = ui.percentage(score, options.ui.scores[3]);
             ui.updateProgressBar(options, $el, cssClass, barPercentage);
             if (options.ui.showVerdictsInsideProgressBar) {
-                ui.updateVerdict(options, $el, verdictText);
+                ui.updateVerdict(options, $el, verdictCssClass, verdictText);
             }
         }
 
@@ -516,7 +529,7 @@ var ui = {};
             ui.updatePopover(options, $el, verdictText);
         } else {
             if (options.ui.showVerdicts && !options.ui.showVerdictsInsideProgressBar) {
-                ui.updateVerdict(options, $el, verdictText);
+                ui.updateVerdict(options, $el, verdictCssClass, verdictText);
             }
             if (options.ui.showErrors) {
                 ui.updateErrors(options, $el);
@@ -548,15 +561,19 @@ var methods = {};
         if (options === undefined) { return; }
 
         options.instances.errors = [];
-        if (options.common.zxcvbn) {
-            userInputs = [];
-            $.each(options.common.userInputs, function (idx, selector) {
-                userInputs.push($(selector).val());
-            });
-            userInputs.push($(options.common.usernameField).val());
-            score = zxcvbn(word, userInputs).entropy;
+        if (word.length === 0) {
+            score = 0;
         } else {
-            score = rulesEngine.executeRules(options, word);
+            if (options.common.zxcvbn) {
+                userInputs = [];
+                $.each(options.common.userInputs, function (idx, selector) {
+                    userInputs.push($(selector).val());
+                });
+                userInputs.push($(options.common.usernameField).val());
+                score = zxcvbn(word, userInputs).entropy;
+            } else {
+                score = rulesEngine.executeRules(options, word);
+            }
         }
         ui.updateUI(options, $el, score);
         verdictText = ui.getVerdictAndCssClass(options, score);

@@ -56,18 +56,18 @@ module.exports = function (grunt) {
                     'src/rules.js', 'src/options.js', 'src/ui.js',
                     'src/methods.js'
                 ],
-                dest: '<%= pkg.name %>-<%= pkg.version %>.js'
+                dest: '<%= pkg.name %>.js'
             }
         },
         uglify: {
             options: {
                 banner: '/* <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %> - GPLv3 & MIT License */\n',
                 sourceMap: true,
-                sourceMapName: '<%= pkg.name %>-<%= pkg.version %>.min.map'
+                sourceMapName: '<%= pkg.name %>.min.map'
             },
             dist: {
                 files: {
-                    '<%= pkg.name %>-<%= pkg.version %>.min.js': [
+                    '<%= pkg.name %>.min.js': [
                         '<%= concat.dist.dest %>'
                     ]
                 }
@@ -81,7 +81,7 @@ module.exports = function (grunt) {
                 command: 'mkdir -p dist'
             },
             moveFiles: {
-                command: 'mv <%= pkg.name %>-<%= pkg.version %>* dist/'
+                command: 'mv <%= pkg.name %>* dist/'
             }
         }
     });
