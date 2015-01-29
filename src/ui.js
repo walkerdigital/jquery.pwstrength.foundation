@@ -131,9 +131,13 @@ var ui = {};
         $bar.css("width", percentage + '%');
     };
 
-    ui.updateVerdict = function (options, $el, text) {
+    ui.updateVerdict = function (options, $el, cssClass, text) {
         var $verdict = ui.getUIElements(options, $el).$verdict;
-        $verdict.text(text);
+        $verdict.removeClass(barClasses.join(' '));
+        if (cssClass > -1) {
+            $verdict.addClass(barClasses[cssClass]);
+        }
+        $verdict.html(text);
     };
 
     ui.updateErrors = function (options, $el) {
@@ -168,12 +172,10 @@ var ui = {};
             hide = false;
         }
         if (options.ui.showErrors) {
-            html += "<div>Errors:<ul class='error-list' style='margin-bottom: 0;'>";
-            $.each(options.instances.errors, function (idx, err) {
-                html += "<li>" + err + "</li>";
+            if (options.instances.errors.length > 0) {
                 hide = false;
-            });
-            html += "</ul></div>";
+            }
+            html += options.ui.popoverError(options.instances.errors);
         }
 
         if (hide) {
@@ -204,7 +206,7 @@ var ui = {};
 
     ui.percentage = function (score, maximun) {
         var result = Math.floor(100 * score / maximun);
-        result = result < 0 ? 0 : result;
+        result = result < 0 ? 1 : result; // Don't show the progress bar empty
         result = result > 100 ? 100 : result;
         return result;
     };
@@ -242,17 +244,18 @@ var ui = {};
     };
 
     ui.updateUI = function (options, $el, score) {
-        var cssClass, barPercentage, verdictText;
+        var cssClass, barPercentage, verdictText, verdictCssClass;
 
         cssClass = ui.getVerdictAndCssClass(options, score);
-        verdictText = cssClass[0];
+        verdictText = score === 0 ? '' : cssClass[0];
         cssClass = cssClass[1];
+        verdictCssClass = options.ui.useVerdictCssClass ? cssClass : -1;
 
         if (options.ui.showProgressBar) {
             barPercentage = ui.percentage(score, options.ui.scores[3]);
             ui.updateProgressBar(options, $el, cssClass, barPercentage);
             if (options.ui.showVerdictsInsideProgressBar) {
-                ui.updateVerdict(options, $el, verdictText);
+                ui.updateVerdict(options, $el, verdictCssClass, verdictText);
             }
         }
 
@@ -264,7 +267,7 @@ var ui = {};
             ui.updatePopover(options, $el, verdictText);
         } else {
             if (options.ui.showVerdicts && !options.ui.showVerdictsInsideProgressBar) {
-                ui.updateVerdict(options, $el, verdictText);
+                ui.updateVerdict(options, $el, verdictCssClass, verdictText);
             }
             if (options.ui.showErrors) {
                 ui.updateErrors(options, $el);

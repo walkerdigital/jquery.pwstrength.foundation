@@ -1,5 +1,5 @@
-/*jslint browser: true */
-/*global */
+/*jslint browser: true, unparam: true */
+/*global jQuery */
 
 /*
 * jQuery Password Strength plugin for Zurb Foundation
@@ -69,8 +69,17 @@ defaultOptions.ui.spanError = function (options, key) {
     "use strict";
     var text = options.ui.errorMessages[key];
     if (!text) { return ''; }
-    // return '<span style="color: #d52929">' + text + '</span>';
     return text;
+};
+defaultOptions.ui.popoverError = function (errors) {
+    "use strict";
+    var message = "<div>Errors:<ul class='error-list' style='margin-bottom: 0;'>";
+
+    jQuery.each(errors, function (idx, err) {
+        message += "<li>" + err + "</li>";
+    });
+    message += "</ul></div>";
+    return message;
 };
 defaultOptions.ui.errorMessages = {
     wordLength: "Your password is too short",
@@ -83,12 +92,12 @@ defaultOptions.ui.errorMessages = {
 defaultOptions.ui.verdicts = ["Weak", "Normal", "Medium", "Strong", "Very Strong"];
 defaultOptions.ui.showVerdicts = true;
 defaultOptions.ui.showVerdictsInsideProgressBar = false;
-defaultOptions.ui.showErrors = true;
+defaultOptions.ui.useVerdictCssClass = false;
+defaultOptions.ui.showErrors = false;
 defaultOptions.ui.container = undefined;
 defaultOptions.ui.viewports = {
     progress: undefined,
     verdict: '.postfix',
-    errors: undefined,
-    status: undefined
+    errors: undefined
 };
 defaultOptions.ui.scores = [14, 26, 38, 50];

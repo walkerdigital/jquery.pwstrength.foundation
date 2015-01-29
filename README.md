@@ -44,17 +44,8 @@ To apply it only to one input and change the options:
 
 ## Options
 
-The plugin expect the options to follow this structure:
+Click here to find [the complete list of options for the plugin](OPTIONS.md).
 
-```javascript
-options = {
-    common: {},
-    rules: {},
-    ui: {}
-};
-```
-
-Let's see the options of each section.
 
 ### Common
 
@@ -457,6 +448,7 @@ python -m SimpleHTTPServer
 
 And go to [localhost:8000](http://localhost:8000).
 
+Alternatively, you can check-out the examples in a [hosted demo](https://cdn.rawgit.com/ablanco/jquery.pwstrength.bootstrap/master/examples/index.html).
 
 ## Build and Test
 

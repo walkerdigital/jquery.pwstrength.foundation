@@ -27,15 +27,19 @@ var methods = {};
         if (options === undefined) { return; }
 
         options.instances.errors = [];
-        if (options.common.zxcvbn) {
-            userInputs = [];
-            $.each(options.common.userInputs, function (idx, selector) {
-                userInputs.push($(selector).val());
-            });
-            userInputs.push($(options.common.usernameField).val());
-            score = zxcvbn(word, userInputs).entropy;
+        if (word.length === 0) {
+            score = 0;
         } else {
-            score = rulesEngine.executeRules(options, word);
+            if (options.common.zxcvbn) {
+                userInputs = [];
+                $.each(options.common.userInputs, function (idx, selector) {
+                    userInputs.push($(selector).val());
+                });
+                userInputs.push($(options.common.usernameField).val());
+                score = zxcvbn(word, userInputs).entropy;
+            } else {
+                score = rulesEngine.executeRules(options, word);
+            }
         }
         ui.updateUI(options, $el, score);
         verdictText = ui.getVerdictAndCssClass(options, score);
