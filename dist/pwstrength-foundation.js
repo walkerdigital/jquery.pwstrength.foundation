@@ -1,6 +1,6 @@
 /*!
 * jQuery Password Strength plugin for Zurb Foundation
-* 2015-01-29
+* 2015-04-07
 *
 * Copyright (c) 2008-2013 Tane Piper
 * Copyright (c) 2013 Alejandro Blanco
@@ -570,6 +570,9 @@ var methods = {};
                     userInputs.push($(selector).val());
                 });
                 userInputs.push($(options.common.usernameField).val());
+                if (options.ui.showErrors) {
+                    rulesEngine.executeRules(options, word);
+                }
                 score = zxcvbn(word, userInputs).entropy;
             } else {
                 score = rulesEngine.executeRules(options, word);

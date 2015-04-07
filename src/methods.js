@@ -36,6 +36,9 @@ var methods = {};
                     userInputs.push($(selector).val());
                 });
                 userInputs.push($(options.common.usernameField).val());
+                if (options.ui.showErrors) {
+                    rulesEngine.executeRules(options, word);
+                }
                 score = zxcvbn(word, userInputs).entropy;
             } else {
                 score = rulesEngine.executeRules(options, word);
