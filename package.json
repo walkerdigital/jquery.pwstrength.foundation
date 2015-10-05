@@ -1,6 +1,6 @@
 {
     "name": "pwstrength-foundation",
-    "version": "1.2.4",
+    "version": "1.2.8",
     "description": "jQuery plugin for Zurb Foundation that provides rulesets for visualy displaying the quality of a users typed in password.",
     "author": "Alejandro Blanco <alejandro.b.e@gmail.com>",
     "contributors": [{
