@@ -64,7 +64,7 @@ defaultOptions.rules.activated = {
 defaultOptions.rules.raisePower = 1.4;
 
 defaultOptions.ui = {};
-defaultOptions.ui.colorClasses = ["error", "warning", "success"];
+defaultOptions.ui.colorClasses = ["alert", "warning", "success"];
 defaultOptions.ui.showProgressBar = true;
 defaultOptions.ui.showPopover = false;
 defaultOptions.ui.popoverPlacement = "bottom";
@@ -101,7 +101,7 @@ defaultOptions.ui.showErrors = false;
 defaultOptions.ui.container = undefined;
 defaultOptions.ui.viewports = {
     progress: undefined,
-    verdict: undefined,
+    verdict: ".postfix",
     errors: undefined
 };
 defaultOptions.ui.scores = [14, 26, 38, 50];

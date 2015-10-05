@@ -53,7 +53,7 @@ var ui = {};
             if (!options.ui.showVerdictsInsideProgressBar) {
                 result.$verdict = ui.findElement($container, options.ui.viewports.verdict, "span.password-verdict");
             }
-            result.$errors = ui.findElement($container, options.ui.viewports.errors, ".error");
+            result.$errors = ui.findElement($container, options.ui.viewports.errors, "small.error");
         }
 
         options.instances.viewports = result;
@@ -90,18 +90,16 @@ var ui = {};
     };
 
     ui.initErrorList = function (options, $el) {
-        ui.initHelper(options, $el, "<small class='error' style='display:none;'></small>",
+        var $container = ui.getContainer(options, $el);
+        if (!ui.findElement($container, options.ui.viewports.errors, 'small.error').length) {
+            ui.initHelper(options, $el, "<small class='error' style='display:none;'></small>",
                         options.ui.viewports.errors);
+        }
     };
 
     ui.initPopover = function (options, $el) {
-        $el.popover("destroy");
-        $el.popover({
-            html: true,
-            placement: options.ui.popoverPlacement,
-            trigger: "manual",
-            content: " "
-        });
+        // Support foundation tooltips?
+        return false;
     };
 
     ui.initUI = function (options, $el) {
@@ -193,7 +191,7 @@ var ui = {};
     };
 
     ui.updateFieldStatus = function (options, $el, cssClass) {
-        var targetClass = "div", //or .error? not sure
+        var targetClass = ".postfix",
             $container = $el.parents(targetClass).first();
 
         $.each(statusClasses, function (idx, css) {
