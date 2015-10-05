@@ -1,6 +1,6 @@
 /*!
 * jQuery Password Strength plugin for Zurb Foundation
-* 2015-04-07
+* 2015-10-05
 *
 * Copyright (c) 2008-2013 Tane Piper
 * Copyright (c) 2013 Alejandro Blanco
@@ -51,7 +51,7 @@ try {
 
     validation.wordSimilarToUsername = function (options, word, score) {
         var username = $(options.common.usernameField).val();
-        if (username && word.toLowerCase().match(username.toLowerCase())) {
+        if (username && word.toLowerCase().match(username.replace(/[\-\[\]\/\{\}\(\)\*\+\=\?\:\.\\\^\$\|\!\,]/g, "\\$&").toLowerCase())) {
             return score;
         }
         return 0;
@@ -76,6 +76,7 @@ try {
             j;
         if (word.length > 2) {
             $.each(rulesEngine.forbiddenSequences, function (idx, seq) {
+                if (found) { return; }
                 var sequences = [seq, seq.split('').reverse().join('')];
                 $.each(sequences, function (idx, sequence) {
                     for (j = 0; j < (word.length - 2); j += 1) { // iterate the word trough a sliding window of size 3:
@@ -183,6 +184,9 @@ defaultOptions.common.userInputs = [
 defaultOptions.common.onLoad = undefined;
 defaultOptions.common.onKeyUp = undefined;
 defaultOptions.common.zxcvbn = false;
+defaultOptions.common.zxcvbnTerms = [
+    // List of disrecommended words
+];
 defaultOptions.common.debug = false;
 
 defaultOptions.rules = {};
@@ -191,7 +195,7 @@ defaultOptions.rules.scores = {
     wordNotEmail: -100,
     wordLength: -50,
     wordSimilarToUsername: -100,
-    wordSequences: -50,
+    wordSequences: -20,
     wordTwoCharacterClasses: 2,
     wordRepetitions: -25,
     wordLowercase: 1,
@@ -224,9 +228,10 @@ defaultOptions.rules.activated = {
 defaultOptions.rules.raisePower = 1.4;
 
 defaultOptions.ui = {};
-// defaultOptions.ui.bootstrap2 = false;
+defaultOptions.ui.colorClasses = ["error", "warning", "success"];
 defaultOptions.ui.showProgressBar = true;
 defaultOptions.ui.showPopover = false;
+defaultOptions.ui.popoverPlacement = "bottom";
 defaultOptions.ui.showStatus = false;
 defaultOptions.ui.spanError = function (options, key) {
     "use strict";
@@ -260,7 +265,7 @@ defaultOptions.ui.showErrors = false;
 defaultOptions.ui.container = undefined;
 defaultOptions.ui.viewports = {
     progress: undefined,
-    verdict: '.postfix',
+    verdict: undefined,
     errors: undefined
 };
 defaultOptions.ui.scores = [14, 26, 38, 50];
@@ -275,8 +280,7 @@ var ui = {};
 (function ($, ui) {
     "use strict";
 
-    var barClasses = ["alert", "success", "success"],
-        statusClasses = ["alert", "warning", "success"];
+    var statusClasses = ["error", "warning", "success"];
 
     ui.getContainer = function (options, $el) {
         var $container;
@@ -360,7 +364,7 @@ var ui = {};
         $el.popover("destroy");
         $el.popover({
             html: true,
-            placement: "bottom",
+            placement: options.ui.popoverPlacement,
             trigger: "manual",
             content: " "
         });
@@ -386,18 +390,18 @@ var ui = {};
         var $progressbar = ui.getUIElements(options, $el).$progressbar,
             $bar = $progressbar.find(".meter");
 
-        $.each(ui.possibleProgressBarClasses, function (idx, value) {
+        $.each(options.ui.colorClasses, function (idx, value) {
             $progressbar.removeClass(value);
         });
-        $progressbar.addClass(barClasses[cssClass]);
+        $progressbar.addClass(options.ui.colorClasses[cssClass]);
         $bar.css("width", percentage + '%');
     };
 
     ui.updateVerdict = function (options, $el, cssClass, text) {
         var $verdict = ui.getUIElements(options, $el).$verdict;
-        $verdict.removeClass(barClasses.join(' '));
+        $verdict.removeClass(options.ui.colorClasses.join(' '));
         if (cssClass > -1) {
-            $verdict.addClass(barClasses[cssClass]);
+            $verdict.addClass(options.ui.colorClasses[cssClass]);
         }
         $verdict.html(text);
     };
@@ -455,8 +459,8 @@ var ui = {};
     };
 
     ui.updateFieldStatus = function (options, $el, cssClass) {
-
-        var $container = options.ui.viewports.status ? $(options.ui.viewports.status) : ui.getContainer(options, $el);
+        var targetClass = "div", //or .error? not sure
+            $container = $el.parents(targetClass).first();
 
         $.each(statusClasses, function (idx, css) {
             $container.removeClass(css);
@@ -468,7 +472,7 @@ var ui = {};
 
     ui.percentage = function (score, maximun) {
         var result = Math.floor(100 * score / maximun);
-        result = result < 0 ? 1 : result; // Don't show the progress bar empty
+        result = result <= 0 ? 1 : result; // Don't show the progress bar empty
         result = result > 100 ? 100 : result;
         return result;
     };
@@ -566,13 +570,11 @@ var methods = {};
         } else {
             if (options.common.zxcvbn) {
                 userInputs = [];
-                $.each(options.common.userInputs, function (idx, selector) {
-                    userInputs.push($(selector).val());
+                $.each(options.common.userInputs.concat([options.common.usernameField]), function (idx, selector) {
+                    var value = $(selector).val();
+                    if (value) { userInputs.push(value); }
                 });
-                userInputs.push($(options.common.usernameField).val());
-                if (options.ui.showErrors) {
-                    rulesEngine.executeRules(options, word);
-                }
+                userInputs = userInputs.concat(options.common.zxcvbnTerms);
                 score = zxcvbn(word, userInputs).entropy;
             } else {
                 score = rulesEngine.executeRules(options, word);

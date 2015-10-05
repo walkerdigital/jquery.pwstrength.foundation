@@ -20,6 +20,9 @@ defaultOptions.common.userInputs = [
 defaultOptions.common.onLoad = undefined;
 defaultOptions.common.onKeyUp = undefined;
 defaultOptions.common.zxcvbn = false;
+defaultOptions.common.zxcvbnTerms = [
+    // List of disrecommended words
+];
 defaultOptions.common.debug = false;
 
 defaultOptions.rules = {};
@@ -28,7 +31,7 @@ defaultOptions.rules.scores = {
     wordNotEmail: -100,
     wordLength: -50,
     wordSimilarToUsername: -100,
-    wordSequences: -50,
+    wordSequences: -20,
     wordTwoCharacterClasses: 2,
     wordRepetitions: -25,
     wordLowercase: 1,
@@ -61,9 +64,10 @@ defaultOptions.rules.activated = {
 defaultOptions.rules.raisePower = 1.4;
 
 defaultOptions.ui = {};
-// defaultOptions.ui.bootstrap2 = false;
+defaultOptions.ui.colorClasses = ["error", "warning", "success"];
 defaultOptions.ui.showProgressBar = true;
 defaultOptions.ui.showPopover = false;
+defaultOptions.ui.popoverPlacement = "bottom";
 defaultOptions.ui.showStatus = false;
 defaultOptions.ui.spanError = function (options, key) {
     "use strict";
@@ -97,7 +101,7 @@ defaultOptions.ui.showErrors = false;
 defaultOptions.ui.container = undefined;
 defaultOptions.ui.viewports = {
     progress: undefined,
-    verdict: '.postfix',
+    verdict: undefined,
     errors: undefined
 };
 defaultOptions.ui.scores = [14, 26, 38, 50];

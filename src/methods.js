@@ -32,13 +32,11 @@ var methods = {};
         } else {
             if (options.common.zxcvbn) {
                 userInputs = [];
-                $.each(options.common.userInputs, function (idx, selector) {
-                    userInputs.push($(selector).val());
+                $.each(options.common.userInputs.concat([options.common.usernameField]), function (idx, selector) {
+                    var value = $(selector).val();
+                    if (value) { userInputs.push(value); }
                 });
-                userInputs.push($(options.common.usernameField).val());
-                if (options.ui.showErrors) {
-                    rulesEngine.executeRules(options, word);
-                }
+                userInputs = userInputs.concat(options.common.zxcvbnTerms);
                 score = zxcvbn(word, userInputs).entropy;
             } else {
                 score = rulesEngine.executeRules(options, word);

@@ -14,8 +14,7 @@ var ui = {};
 (function ($, ui) {
     "use strict";
 
-    var barClasses = ["alert", "success", "success"],
-        statusClasses = ["alert", "warning", "success"];
+    var statusClasses = ["error", "warning", "success"];
 
     ui.getContainer = function (options, $el) {
         var $container;
@@ -99,7 +98,7 @@ var ui = {};
         $el.popover("destroy");
         $el.popover({
             html: true,
-            placement: "bottom",
+            placement: options.ui.popoverPlacement,
             trigger: "manual",
             content: " "
         });
@@ -125,18 +124,18 @@ var ui = {};
         var $progressbar = ui.getUIElements(options, $el).$progressbar,
             $bar = $progressbar.find(".meter");
 
-        $.each(ui.possibleProgressBarClasses, function (idx, value) {
+        $.each(options.ui.colorClasses, function (idx, value) {
             $progressbar.removeClass(value);
         });
-        $progressbar.addClass(barClasses[cssClass]);
+        $progressbar.addClass(options.ui.colorClasses[cssClass]);
         $bar.css("width", percentage + '%');
     };
 
     ui.updateVerdict = function (options, $el, cssClass, text) {
         var $verdict = ui.getUIElements(options, $el).$verdict;
-        $verdict.removeClass(barClasses.join(' '));
+        $verdict.removeClass(options.ui.colorClasses.join(' '));
         if (cssClass > -1) {
-            $verdict.addClass(barClasses[cssClass]);
+            $verdict.addClass(options.ui.colorClasses[cssClass]);
         }
         $verdict.html(text);
     };
@@ -194,8 +193,8 @@ var ui = {};
     };
 
     ui.updateFieldStatus = function (options, $el, cssClass) {
-
-        var $container = options.ui.viewports.status ? $(options.ui.viewports.status) : ui.getContainer(options, $el);
+        var targetClass = "div", //or .error? not sure
+            $container = $el.parents(targetClass).first();
 
         $.each(statusClasses, function (idx, css) {
             $container.removeClass(css);
@@ -207,7 +206,7 @@ var ui = {};
 
     ui.percentage = function (score, maximun) {
         var result = Math.floor(100 * score / maximun);
-        result = result < 0 ? 1 : result; // Don't show the progress bar empty
+        result = result <= 0 ? 1 : result; // Don't show the progress bar empty
         result = result > 100 ? 100 : result;
         return result;
     };
